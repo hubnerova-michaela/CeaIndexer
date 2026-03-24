@@ -1,11 +1,26 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace CeaIndexer
 {
     public static class CsvAnalyzer
     {
+        private static int FindValueColumnIndex(string headerLine)
+        {
+            var columns = headerLine.Split(';');
+            
+            for (int i = 0; i < columns.Length; i++)
+            {
+                var colName = columns[i].Trim().ToLower();
+                if (colName == "value" || colName == "hodnota" || colName == "val")
+                    return i;
+            }
+
+            return 2;
+        }
+
         public static (double Min, double Max, DateTime MinTime, DateTime MaxTime) AnalyzeValues(string csvPath)
         {
             if (string.IsNullOrWhiteSpace(csvPath))
@@ -22,21 +37,26 @@ namespace CeaIndexer
             using var reader = new StreamReader(csvPath);
             int lineNumber = 0;
             string? line;
+            int valueColumnIndex = 2;
 
             while ((line = reader.ReadLine()) != null)
             {
                 lineNumber++;
 
                 if (lineNumber <= 5)
+                {
+                    if (lineNumber == 5)
+                        valueColumnIndex = FindValueColumnIndex(line);
                     continue;
+                }
 
                 var columns = line.Split(';');
 
-                if (columns.Length < 3)
+                if (columns.Length <= valueColumnIndex)
                     continue;
 
-                var timeString = columns[1];
-                var valueString = columns[2];
+                var timeString = columns.Length > 1 ? columns[1] : "";
+                var valueString = columns[valueColumnIndex];
 
                 if (double.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out double value) &&
                     DateTime.TryParse(timeString, out DateTime time))
@@ -73,20 +93,25 @@ namespace CeaIndexer
                 using var reader = new StreamReader(csvPath);
                 int lineNumber = 0;
                 string? line;
+                int valueColumnIndex = 2;
 
                 while ((line = reader.ReadLine()) != null)
                 {
                     lineNumber++;
 
                     if (lineNumber <= 5)
+                    {
+                        if (lineNumber == 5)
+                            valueColumnIndex = FindValueColumnIndex(line);
                         continue;
+                    }
 
                     var columns = line.Split(';');
 
-                    if (columns.Length < 3)
+                    if (columns.Length <= valueColumnIndex)
                         continue;
 
-                    var valueString = columns[2];
+                    var valueString = columns[valueColumnIndex];
 
                     if (double.TryParse(valueString, NumberStyles.Any, CultureInfo.InvariantCulture, out double value))
                     {
@@ -101,11 +126,18 @@ namespace CeaIndexer
                     }
                 }
 
-                double average = count > 0 ? sum / count : 0;
-                return (minValue == double.MaxValue ? 0 : minValue, maxValue == double.MinValue ? 0 : maxValue, average);
+                if (count == 0)
+                {
+                    Logger.Log($"Warning: No valid values found in CSV: {csvPath}");
+                    return (0, 0, 0);
+                }
+
+                double average = sum / count;
+                return (minValue, maxValue, average);
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError($"Error reading CSV {csvPath}", ex);
                 return (0, 0, 0);
             }
         }

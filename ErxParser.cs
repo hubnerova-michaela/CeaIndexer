@@ -17,35 +17,58 @@ namespace CeaIndexer
             foreach (var line in lines)
             {
                 int separatorIndex = line.IndexOf(':');
-
                 if (separatorIndex == -1)
                     continue;
 
-                var key = line[..separatorIndex].Trim();
+                var rawKey = line[..separatorIndex].Trim();
+                var key = rawKey.ToLowerInvariant();
                 var value = line[(separatorIndex + 1)..].Trim();
+
+                if (string.IsNullOrWhiteSpace(value))
+                    continue;
 
                 switch (key)
                 {
-                    case "Identify":
+                    case "identify":
+                    case "identified":
+                    case "date":
                         if (DateTime.TryParse(value, out DateTime parsedDate))
                             entry.IdentifyDate = parsedDate;
                         break;
-                    case "Model":
+
+                    case "model":
                         entry.Model = value;
                         break;
-                    case "Record Name":
+
+                    case "record name":
+                    case "recordname":
+                    case "name":
                         entry.RecordName = value;
                         break;
-                    case "Record GUID":
+
+                    case "record guid":
+                    case "recordguid":
+                    case "guid":
                         entry.RecordGuid = value;
                         break;
-                    case "Serial Number":
+
+                    case "serial number":
+                    case "serialnumber":
+                    case "serial":
                         entry.SerialNumber = value;
                         break;
-                    case "Hardware Version":
+
+                    case "hardware version":
+                    case "hardwareversion":
+                    case "hw version":
+                    case "hw":
                         entry.HardwareVersion = value;
                         break;
-                    case "Firmware Version":
+
+                    case "firmware version":
+                    case "firmwareversion":
+                    case "fw version":
+                    case "fw":
                         entry.FirmwareVersion = value;
                         break;
                 }
@@ -79,11 +102,7 @@ namespace CeaIndexer
                 }
 
                 var quantityName = trimmed;
-                var archive = "main";
-                int underscoreIndex = quantityName.IndexOf('_');
-
-                if (underscoreIndex > 0)
-                    archive = quantityName[..underscoreIndex];
+                var archive = ExtractArchiveFromQuantityName(quantityName);
 
                 entry.Quantities.Add(new Quantity
                 {
@@ -92,6 +111,19 @@ namespace CeaIndexer
                     FileEntry = entry
                 });
             }
+        }
+
+        private static string ExtractArchiveFromQuantityName(string quantityName)
+        {
+            if (string.IsNullOrEmpty(quantityName))
+                return "main";
+
+            var parts = quantityName.Split('_');
+            
+            if (parts.Length > 0 && !string.IsNullOrEmpty(parts[0]))
+                return parts[0];
+            
+            return "main";
         }
     }
 }

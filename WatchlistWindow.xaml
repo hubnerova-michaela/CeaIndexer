@@ -1,0 +1,96 @@
+<Window x:Class="CeaIndexer.WatchlistWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Manage Watched Quantities"
+        Height="500"
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        Background="White">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock x:Name="SearchLabel" Text="Search quantity:" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBox x:Name="SearchBox" Padding="8" Height="32" TextChanged="SearchBox_TextChanged" Background="White" Foreground="Black"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Right">
+            <CheckBox x:Name="ShowSelectedOnlyCheckBox"
+                      Content="Show selected only"
+                      VerticalAlignment="Center"
+                      Margin="0,0,15,0"
+                      Checked="ShowSelectedOnlyCheckBox_Changed"
+                      Unchecked="ShowSelectedOnlyCheckBox_Changed"/>
+            <Button x:Name="SelectAllButton" Content="Select All" Width="100" Padding="8" Margin="0,0,5,0" Click="SelectAllButton_Click"/>
+            <Button x:Name="DeselectAllButton" Content="Deselect All" Width="100" Padding="8" Click="DeselectAllButton_Click"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Margin="0,0,0,15">
+            <ListBox x:Name="QuantitiesListBox"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Padding="5" Background="White" BorderBrush="LightGray" BorderThickness="0,0,0,1" Margin="0,0,0,5">
+                            <Grid Height="Auto">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox Grid.Column="0"
+                                          IsChecked="{Binding IsSelected}"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,10,0"
+                                          Checked="QuantitySelectionChanged"
+                                          Unchecked="QuantitySelectionChanged"/>
+
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding Name}"
+                                           FontWeight="Bold"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="Black"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPendingScan}" Value="True">
+                                                    <Setter Property="Foreground" Value="Red"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel x:Name="LoadingPanel"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Visibility="Collapsed">
+                <ProgressBar Width="200" Height="10" IsIndeterminate="True" Margin="0,0,0,10"/>
+                <TextBlock x:Name="LoadingTextBlock" Text="Loading quantities..." TextAlignment="Center" Foreground="Gray"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="3" Margin="0,0,0,10">
+            <TextBlock x:Name="CountLabel" Foreground="Gray" FontSize="11"/>
+            <TextBlock x:Name="PendingLegendTextBlock" Foreground="Red" FontSize="11" Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="CancelButton" Content="Cancel" Width="100" Padding="8" Margin="0,0,10,0" Click="CancelButton_Click" Background="#E8E8E8" Foreground="Black"/>
+            <Button x:Name="SaveButton" Content="Save Selection" Width="120" Padding="8" Background="#0078D7" Foreground="White" Click="SaveButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

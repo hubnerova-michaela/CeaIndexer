@@ -51,5 +51,6 @@ namespace CeaIndexer
         public string ErxExePath { get; set; } = "";
         public string CeaFolderPath { get; set; } = "";
         public string Language { get; set; } = "en";
+        public string WatchedQuantities { get; set; } = "main_U_avg_U1;main_U_avg_U2;main_U_avg_U3;status_temp_core;status_U_nom";
     }
 }
