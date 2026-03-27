@@ -128,7 +128,7 @@ namespace CeaIndexer
 
                 if (count == 0)
                 {
-                    Logger.Log($"Warning: No valid values found in CSV: {csvPath}");
+                    //Logger.Log($"Warning: No valid values found in CSV: {csvPath}");
                     return (0, 0, 0);
                 }
 
@@ -137,7 +137,7 @@ namespace CeaIndexer
             }
             catch (Exception ex)
             {
-                Logger.LogError($"Error reading CSV {csvPath}", ex);
+                //Logger.LogError($"Error reading CSV {csvPath}", ex);
                 return (0, 0, 0);
             }
         }

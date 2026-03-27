@@ -1,12 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CeaIndexer.Models;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 
-namespace CeaIndexer
+namespace CeaIndexer.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<FileEntry> Files => Set<FileEntry>();
-        public DbSet<Quantity> Quantities { get; set; }
+
+        public DbSet<FileEntry> Files { get; set; }
+        public DbSet<MeasurePoint> MeasurePoints { get; set; }
+        public DbSet<QuantityItem> Quantities { get; set; }
+        public DbSet<TimeInterval> TimeIntervals { get; set; }
 
         private static string GetDbPath()
         {
@@ -23,11 +27,13 @@ namespace CeaIndexer
             }
         }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<FileEntry>()
                 .HasIndex(f => f.Path)
                 .IsUnique();
+
         }
     }
 }

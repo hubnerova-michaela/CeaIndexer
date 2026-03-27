@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Btn_Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Btn_Save" xml:space="preserve">
+    <value>Save Settings</value>
+  </data>
+  <data name="Btn_ScanFile" xml:space="preserve">
+    <value>Scan File</value>
+  </data>
+  <data name="Btn_ScanFolder" xml:space="preserve">
+    <value>Scan Folder</value>
+  </data>
+  <data name="Btn_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Dialog_Filter_Cea" xml:space="preserve">
+    <value>KMB Files (*.cea)|*.cea|All Files (*.*)|*.*</value>
+  </data>
+  <data name="Dialog_Title_SelectFiles" xml:space="preserve">
+    <value>Select data files to scan</value>
+  </data>
+  <data name="Dialog_Title_SelectFolder" xml:space="preserve">
+    <value>Select a folder to scan</value>
+  </data>
+  <data name="Msg_Done" xml:space="preserve">
+    <value>Done</value>
+  </data>
+  <data name="Msg_ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Msg_MissingSettingsTitle" xml:space="preserve">
+    <value>Missing Configuration</value>
+  </data>
+  <data name="Msg_ScanError" xml:space="preserve">
+    <value>An error occurred during scanning:</value>
+  </data>
+  <data name="Msg_ScanSuccess" xml:space="preserve">
+    <value>The file/s was/were successfully scanned and saved to the database!</value>
+  </data>
+  <data name="Window_GettingStarted_Title" xml:space="preserve">
+    <value>Getting Started</value>
+  </data>
+  <data name="MainWindow_Title" xml:space="preserve">
+    <value>ERX Data Catalog</value>
+  </data>
+  <data name="MainWindow_Subtitle" xml:space="preserve">
+    <value>ERX Explorer</value>
+  </data>
+  <data name="FirstRun_Title" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="FirstRun_Header" xml:space="preserve">
+    <value>Welcome to the app!</value>
+  </data>
+  <data name="FirstRun_Description" xml:space="preserve">
+    <value>Before we begin, let’s go over the basic settings. You can change these settings at any time later.</value>
+  </data>
+  <data name="FirstRun_ErxPath" xml:space="preserve">
+    <value>Path to the erx.exe program:</value>
+  </data>
+  <data name="FirstRun_Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="FirstRun_Folders" xml:space="preserve">
+    <value>Source data files (.cea):</value>
+  </data>
+  <data name="FirstRun_AddFolder" xml:space="preserve">
+    <value>Add Folder...</value>
+  </data>
+  <data name="FirstRun_RemoveFolder" xml:space="preserve">
+    <value>Remove folder</value>
+  </data>
+  <data name="FirstRun_Language" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  <data name="FirstRun_LangCs" xml:space="preserve">
+    <value>Czech (cs-CZ)</value>
+  </data>
+  <data name="FirstRun_LangEn" xml:space="preserve">
+    <value>English (en-US)</value>
+  </data>
+  <data name="FirstRun_Save" xml:space="preserve">
+    <value>Save and continue</value>
+  </data>
+  <data name="Indexer_Title" xml:space="preserve">
+    <value>Indexing new data</value>
+  </data>
+  <data name="Indexer_SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="Indexer_DeselectAll" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="Indexer_StartButton" xml:space="preserve">
+    <value>Start Indexing</value>
+  </data>
+  <data name="Settings_Title" xml:space="preserve">
+    <value>App Configuration</value>
+  </data>
+  <data name="Settings_ErxPath" xml:space="preserve">
+    <value>Path to the erx.exe program</value>
+  </data>
+  <data name="Btn_Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="Settings_Folders" xml:space="preserve">
+    <value>Source data files (.cea):</value>
+  </data>
+  <data name="Settings_AddFolder" xml:space="preserve">
+    <value>Add Folder</value>
+  </data>
+  <data name="Settings_RemoveSelected" xml:space="preserve">
+    <value>Remove Selected</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>App language (requires a restart)</value>
+  </data>
+  <data name="Lang_Cs" xml:space="preserve">
+    <value>Czech (cs-CZ)</value>
+  </data>
+  <data name="Lang_En" xml:space="preserve">
+    <value>English (en-US)</value>
+  </data>
+  <data name="Settings_Save" xml:space="preserve">
+    <value>Save configuration</value>
+  </data>
+  <data name="Progress_Title" xml:space="preserve">
+    <value>Monitoring indexace dat</value>
+  </data>
+  <data name="Progress_Preparing" xml:space="preserve">
+    <value>Preparing to scan...</value>
+  </data>
+  <data name="Progress_FileQueue" xml:space="preserve">
+    <value>File Queue</value>
+  </data>
+  <data name="Progress_CurrentlyProcessing" xml:space="preserve">
+    <value>Currently Processing:</value>
+  </data>
+  <data name="Watchlist_Title" xml:space="preserve">
+    <value>Manage Watched Quantities</value>
+  </data>
+  <data name="Watchlist_SearchContent" xml:space="preserve">
+    <value>Search quantity:</value>
+  </data>
+  <data name="Watchlist_ShowSelected" xml:space="preserve">
+    <value>Show selected only</value>
+  </data>
+  <data name="Watchlist_SelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="Watchlist_DeselectAll" xml:space="preserve">
+    <value>Deselect All</value>
+  </data>
+  <data name="Watchlist_Loading" xml:space="preserve">
+    <value>Loading quantities...</value>
+  </data>
+  <data name="Btn_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Btn_SaveSelection" xml:space="preserve">
+    <value>Save Selection</value>
+  </data>
+</root>

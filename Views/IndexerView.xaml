@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="CeaIndexer.Views.IndexerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CeaIndexer.Views"
+             xmlns:p="clr-namespace:CeaIndexer.Properties"
+             mc:Ignorable="d" 
+             Background="#F8F9FA">
+    
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="BtnBack" Grid.Column="0" Content="←" 
+                    FontSize="24" FontFamily="Segoe UI" Foreground="#7F8C8D" 
+                    Background="Transparent" BorderThickness="0" Cursor="Hand" 
+                    Margin="0,0,15,0" VerticalAlignment="Center" Click="BtnBack_Click"/>
+
+            <TextBlock Grid.Column="1" Text="{x:Static p:Resources.Indexer_Title}" 
+                       FontSize="26" FontWeight="SemiBold" Foreground="#2C3E50" 
+                       VerticalAlignment="Center"/>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <Button Content="{x:Static p:Resources.Indexer_SelectAll}" Background="Transparent" BorderThickness="0" 
+                    Foreground="#3498DB" FontWeight="SemiBold" Cursor="Hand" 
+                    Margin="0,0,20,0" FontSize="14" Click="BtnSelectAll_Click"/>
+
+            <Button Content="{x:Static p:Resources.Indexer_DeselectAll}" Background="Transparent" BorderThickness="0" 
+                    Foreground="#95A5A6" FontWeight="SemiBold" Cursor="Hand" 
+                    FontSize="14" Click="BtnDeselectAll_Click"/>
+        </StackPanel>
+
+        <TreeView x:Name="TvFolders" Grid.Row="2" BorderThickness="0" Background="Transparent" Padding="0,5">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal" Margin="2,4">
+                        <CheckBox IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Margin="0,0,10,0">
+                            <CheckBox.LayoutTransform>
+                                <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+                            </CheckBox.LayoutTransform>
+                        </CheckBox>
+                        <TextBlock x:Name="NodeIcon" Text="📁" FontSize="18" VerticalAlignment="Center" Margin="0,0,8,0" Foreground="#F39C12" />
+                        
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontSize="15" Foreground="#34495E"/>
+                    </StackPanel>
+                    <HierarchicalDataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsFile}" Value="True">
+                            <Setter TargetName="NodeIcon" Property="Text" Value="📄" />
+                            <Setter TargetName="NodeIcon" Property="Foreground" Value="#95A5A6" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsFile}" Value="False">
+                            <Setter TargetName="NodeIcon" Property="Text" Value="📁" />
+                            <Setter TargetName="NodeIcon" Property="Foreground" Value="#F39C12" />
+                        </DataTrigger>
+                    </HierarchicalDataTemplate.Triggers>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <Button x:Name="BtnStartIndex" Grid.Row="3" Content="{x:Static p:Resources.Indexer_StartButton}" 
+                Margin="0,20,0,0" Padding="20,12" FontSize="16" FontWeight="Bold" 
+                Background="#27AE60" Foreground="White" BorderThickness="0" Cursor="Hand"
+                HorizontalAlignment="Right" MinWidth="180" Click="BtnStartIndex_Click"/>
+    </Grid>
+</UserControl>

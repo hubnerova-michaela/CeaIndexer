@@ -1,7 +1,8 @@
 <Window x:Class="CeaIndexer.WatchlistWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Manage Watched Quantities"
+        xmlns:p="clr-namespace:CeaIndexer.Properties"
+        Title="{x:Static p:Resources.Watchlist_Title}"
         Height="500"
         Width="500"
         WindowStartupLocation="CenterOwner"
@@ -17,19 +18,19 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Margin="0,0,0,15">
-            <TextBlock x:Name="SearchLabel" Text="Search quantity:" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBlock x:Name="SearchLabel" Text="{x:Static p:Resources.Watchlist_SearchContent}" FontWeight="Bold" Margin="0,0,0,5"/>
             <TextBox x:Name="SearchBox" Padding="8" Height="32" TextChanged="SearchBox_TextChanged" Background="White" Foreground="Black"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Right">
             <CheckBox x:Name="ShowSelectedOnlyCheckBox"
-                      Content="Show selected only"
+                      Content="{x:Static p:Resources.Watchlist_ShowSelected}"
                       VerticalAlignment="Center"
                       Margin="0,0,15,0"
                       Checked="ShowSelectedOnlyCheckBox_Changed"
                       Unchecked="ShowSelectedOnlyCheckBox_Changed"/>
-            <Button x:Name="SelectAllButton" Content="Select All" Width="100" Padding="8" Margin="0,0,5,0" Click="SelectAllButton_Click"/>
-            <Button x:Name="DeselectAllButton" Content="Deselect All" Width="100" Padding="8" Click="DeselectAllButton_Click"/>
+            <Button x:Name="SelectAllButton" Content="{x:Static p:Resources.Watchlist_SelectAll}" Width="100" Padding="8" Margin="0,0,5,0" Click="SelectAllButton_Click"/>
+            <Button x:Name="DeselectAllButton" Content="{x:Static p:Resources.Watchlist_DeselectAll}" Width="100" Padding="8" Click="DeselectAllButton_Click"/>
         </StackPanel>
 
         <Grid Grid.Row="2" Margin="0,0,0,15">
@@ -79,7 +80,7 @@
                         HorizontalAlignment="Center"
                         Visibility="Collapsed">
                 <ProgressBar Width="200" Height="10" IsIndeterminate="True" Margin="0,0,0,10"/>
-                <TextBlock x:Name="LoadingTextBlock" Text="Loading quantities..." TextAlignment="Center" Foreground="Gray"/>
+                <TextBlock x:Name="LoadingTextBlock" Text="{x:Static p:Resources.Watchlist_Loading}" TextAlignment="Center" Foreground="Gray"/>
             </StackPanel>
         </Grid>
 
@@ -89,8 +90,8 @@
         </StackPanel>
 
         <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="CancelButton" Content="Cancel" Width="100" Padding="8" Margin="0,0,10,0" Click="CancelButton_Click" Background="#E8E8E8" Foreground="Black"/>
-            <Button x:Name="SaveButton" Content="Save Selection" Width="120" Padding="8" Background="#0078D7" Foreground="White" Click="SaveButton_Click"/>
+            <Button x:Name="CancelButton" Content="{x:Static p:Resources.Btn_Cancel}" Width="100" Padding="8" Margin="0,0,10,0" Click="CancelButton_Click" Background="#E8E8E8" Foreground="Black"/>
+            <Button x:Name="SaveButton" Content="{x:Static p:Resources.Btn_SaveSelection}" Width="120" Padding="8" Background="#0078D7" Foreground="White" Click="SaveButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
