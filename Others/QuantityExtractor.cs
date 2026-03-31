@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CeaIndexer
+namespace CeaIndexer.Others
 {
 //    public static class QuantityExtractor
 //    {

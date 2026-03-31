@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace CeaIndexer
+namespace CeaIndexer.Others
 {
     public static class CsvAnalyzer
     {

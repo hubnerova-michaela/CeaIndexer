@@ -6,55 +6,153 @@
              xmlns:local="clr-namespace:CeaIndexer.Views"
              xmlns:p="clr-namespace:CeaIndexer.Properties"
              mc:Ignorable="d" 
-             Background="#F8F9FA">
+             Background="Transparent">
 
-    <Grid Margin="30">
+    <UserControl.Resources>
+        <Style x:Key="FlatButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource CardBgBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource HoverBrush}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource HoverBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DangerFlatButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E74C3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#F5B7B1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFF0F0"/>
+                    <Setter Property="BorderBrush" Value="#E74C3C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="AccentButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="{x:Static p:Resources.Settings_Title}" FontSize="26" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,0,0,25"/>
-
-        <StackPanel Grid.Row="1" MaxWidth="700" HorizontalAlignment="Left" Width="1000">
-
-            <TextBlock Text="{x:Static p:Resources.Settings_ErxPath}" FontWeight="SemiBold" FontSize="15" Foreground="#34495E" Margin="0,0,0,5"/>
-            <Grid Margin="0,0,0,25">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox x:Name="TxtErxPath" Grid.Column="0" Margin="0,0,10,0" Padding="8" FontSize="14" IsReadOnly="True" Background="White" BorderBrush="#BDC3C7"/>
-                <Button x:Name="BtnBrowseErx" Grid.Column="1" Content="{x:Static p:Resources.Btn_Browse}" Padding="15,5" FontSize="14" Cursor="Hand" Background="White" BorderBrush="#BDC3C7" Click="BtnBrowseErx_Click"/>
-            </Grid>
-
-            <TextBlock Text="{x:Static p:Resources.Settings_Folders}" FontWeight="SemiBold" FontSize="15" Foreground="#34495E" Margin="0,0,0,5"/>
-            <Grid Margin="0,0,0,25">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <ListBox x:Name="LstFolders" Grid.Column="0" Margin="0,0,10,0" Height="120" Background="White" BorderBrush="#BDC3C7" FontSize="14" Padding="5"/>
-
-                <StackPanel Grid.Column="1" VerticalAlignment="Top">
-                    <Button x:Name="BtnAddFolder" Content="{x:Static p:Resources.Settings_AddFolder}" Padding="15,8" Margin="0,0,0,10" FontSize="14" Cursor="Hand" Background="White" BorderBrush="#BDC3C7" Click="BtnAddFolder_Click"/>
-                    <Button x:Name="BtnRemoveFolder" Content="{x:Static p:Resources.Settings_RemoveSelected}" Padding="15,8" FontSize="14" Cursor="Hand" Background="#FFF0F0" Foreground="#E74C3C" BorderBrush="#F5B7B1" Click="BtnRemoveFolder_Click"/>
-                </StackPanel>
-            </Grid>
-
-            <TextBlock Text="{x:Static p:Resources.Settings_Language}" FontWeight="SemiBold" FontSize="15" Foreground="#34495E" Margin="0,0,0,5"/>
-            <ComboBox x:Name="CmbLanguage" Padding="8" FontSize="14" Width="250" HorizontalAlignment="Left" Background="White" BorderBrush="#BDC3C7">
-                <ComboBoxItem Content="{x:Static p:Resources.Lang_Cs}" Tag="cs-CZ"/>
-                <ComboBoxItem Content="{x:Static p:Resources.Lang_En}" Tag="en-US"/>
-            </ComboBox>
-
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,25">
+            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE713;" FontSize="24" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBlock Text="{x:Static p:Resources.Settings_Title}" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <Button x:Name="BtnSave" Grid.Row="2" Content="{x:Static p:Resources.Settings_Save}" 
-                Margin="0,20,0,0" Padding="20,12" FontSize="16" FontWeight="Bold" 
-                Background="#2980B9" Foreground="White" BorderThickness="0" Cursor="Hand"
-                HorizontalAlignment="Left" MinWidth="180" Click="BtnSave_Click"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel MaxWidth="800" HorizontalAlignment="Left" Width="1000">
+
+                <TextBlock Text="{x:Static p:Resources.Settings_ErxPath}" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,5"/>
+                <Grid Margin="0,0,0,25">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox x:Name="TxtErxPath" Grid.Column="0" Margin="0,0,10,0" Padding="8" FontSize="14" IsReadOnly="True" 
+                             Background="{DynamicResource CardBgBrush}" Foreground="{DynamicResource TextBrush}" BorderBrush="{DynamicResource BorderBrush}"/>
+
+                    <Button x:Name="BtnBrowseErx" Grid.Column="1" Style="{StaticResource FlatButton}" Padding="15,5" FontSize="14" Click="BtnBrowseErx_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE838;" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{x:Static p:Resources.Btn_Browse}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
+
+                <TextBlock Text="{x:Static p:Resources.Settings_Folders}" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,5"/>
+                <Grid Margin="0,0,0,25">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox x:Name="LstFolders" Grid.Column="0" Margin="0,0,10,0" Height="120" Padding="5" FontSize="14"
+                             Background="{DynamicResource CardBgBrush}" Foreground="{DynamicResource TextBrush}" BorderBrush="{DynamicResource BorderBrush}"/>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Top">
+                        <Button x:Name="BtnAddFolder" Style="{StaticResource FlatButton}" Padding="15,8" Margin="0,0,0,10" FontSize="14" Click="BtnAddFolder_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static p:Resources.Settings_AddFolder}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="BtnRemoveFolder" Style="{StaticResource DangerFlatButton}" Padding="15,8" FontSize="14" Click="BtnRemoveFolder_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static p:Resources.Settings_RemoveSelected}" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="{x:Static p:Resources.Settings_Language}" FontWeight="SemiBold" FontSize="15" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,5"/>
+                <ComboBox x:Name="CmbLanguage" Padding="8" FontSize="14" Width="250" HorizontalAlignment="Left" 
+                          Background="{DynamicResource CardBgBrush}" Foreground="{DynamicResource TextBrush}" BorderBrush="{DynamicResource BorderBrush}">
+                    <ComboBoxItem Content="{x:Static p:Resources.Lang_Cs}" Tag="cs-CZ"/>
+                    <ComboBoxItem Content="{x:Static p:Resources.Lang_En}" Tag="en-US"/>
+                </ComboBox>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button x:Name="BtnSave" Grid.Row="2" Style="{StaticResource AccentButton}" 
+                Margin="0,20,0,0" Padding="20,12" HorizontalAlignment="Left" MinWidth="180" Click="BtnSave_Click">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Static p:Resources.Settings_Save}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
     </Grid>
 </UserControl>

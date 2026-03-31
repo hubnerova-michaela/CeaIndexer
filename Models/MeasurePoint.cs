@@ -44,15 +44,17 @@ namespace CeaIndexer.Models
 
         public double? Fnom { get; set; } // Jmenovitá frekvence
 
-
+        
+        [NotMapped]
+        public int TotalQuantitiesCount => Archives?.Sum(a => a.Quantities?.Count ?? 0) ?? 0; // sečte všechny veličiny ze všech archivů (jen pro zobrazení v UI)
 
         public int FileEntryId { get; set; }
 
         [ForeignKey("FileEntryId")]
         public virtual FileEntry FileEntry { get; set; }
 
-        public virtual ICollection<QuantityItem> Quantities { get; set; } = new List<QuantityItem>();
-        public virtual ICollection<TimeInterval> ActivePeriods { get; set; } = new List<TimeInterval>();
+        //public virtual ICollection<QuantityItem> Quantities { get; set; } = new List<QuantityItem>();
+        public virtual ICollection<Archive> Archives { get; set; } = new List<Archive>();
 
     }
 }

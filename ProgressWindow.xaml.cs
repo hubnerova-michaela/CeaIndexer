@@ -109,8 +109,14 @@ namespace CeaIndexer
                 set { _statusIcon = value; OnPropertyChanged(); }
             }
 
+            public string DetailsSummary { get; set; }
+
             public event PropertyChangedEventHandler PropertyChanged;
             protected void OnPropertyChanged([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
+        private void TopBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) { DragMove(); }
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e) { WindowState = WindowState.Minimized; }
+        private void BtnClose_Click(object sender, RoutedEventArgs e) { Close(); }
     }
 }

@@ -2,150 +2,122 @@
 using CeaIndexer.Views;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace CeaIndexer
 {
-
     public partial class MainWindow : Window
     {
+        private bool _isDarkMode = false;
+
         public MainWindow()
         {
             InitializeComponent();
-
             this.Loaded += MainWindow_Loaded;
         }
 
         private void MainWindow_Loaded(object sender, EventArgs e)
         {
-
-            // Podíváme se do nastavení, jestli už známe cestu k erx.exe
             string erxPath = Properties.Settings.Default.ErxPath;
 
             if (string.IsNullOrWhiteSpace(erxPath))
             {
-                // 1. Rozmažeme pozadí
                 MainContainer.Effect = new BlurEffect { Radius = 15 };
 
-                // 2.Vytvoříme a vycentrujeme okno
                 var firstRunWindow = new FirstRunWindow();
                 firstRunWindow.Owner = this;
-
-                // ShowDialog teď už nic nerozbije a nevytvoří duchy
                 firstRunWindow.ShowDialog();
 
-                // 3. Kontrola po zavření
                 if (string.IsNullOrWhiteSpace(Properties.Settings.Default.ErxPath))
                 {
                     Application.Current.Shutdown();
                 }
                 else
                 {
-                    MainContainer.Effect = null; // Vypneme rozmazání
+                    MainContainer.Effect = null;
                 }
             }
-
         }
 
+        // --- Ovládání okna ---
+        private void TopBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left) this.DragMove();
+        }
 
-        //private async void BtnScanFile_Click(object sender, RoutedEventArgs e)
-        //{
-        //    OpenFileDialog openFileDialog = new OpenFileDialog();
-        //    openFileDialog.Multiselect = true;
-        //    openFileDialog.Filter = Properties.Resources.Dialog_Filter_Cea;
-        //    openFileDialog.Title = Properties.Resources.Dialog_Title_SelectFiles;
+        private void BtnClose_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Normal)
+            {
+                // Maximalizace okna
+                this.MaxHeight = SystemParameters.WorkArea.Height + 10;
+                this.WindowState = WindowState.Maximized;
 
-        //    if (openFileDialog.ShowDialog() == true)
-        //    {
-        //        try
-        //        {
-        //            this.Cursor = System.Windows.Input.Cursors.Wait;
-        //            var scanner = new ScannerService();
+                BtnMaximizeIcon.Content = "\xE923"; // Ikonka "dvou čtverečků"
+                BtnMaximizeIcon.ToolTip = "Obnovit"; // <--- NOVÝ TEXT
+            }
+            else
+            {
+                // Návrat do normální velikosti
+                this.WindowState = WindowState.Normal;
 
-        //            foreach (string vybranySoubor in openFileDialog.FileNames)
-        //            {
-        //                await scanner.ProcessFileAsync(vybranySoubor);
-        //            }
+                BtnMaximizeIcon.Content = "\xE922"; // Ikonka "jednoho čtverečku"
+                BtnMaximizeIcon.ToolTip = "Maximalizovat"; // <--- PŮVODNÍ TEXT
+            }
+        }
 
-        //            MessageBox.Show(
-        //                Properties.Resources.Msg_ScanSuccess,
-        //                Properties.Resources.Msg_Done,
-        //                MessageBoxButton.OK,
-        //                MessageBoxImage.Information);
-        //        }
-        //        catch (InvalidOperationException ex)
-        //        {
-        //            MessageBox.Show(ex.Message, Properties.Resources.Msg_MissingSettingsTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            string errorMessage = $"{Properties.Resources.Msg_ScanError}\n\n{ex.Message}";
-        //            MessageBox.Show(errorMessage, Properties.Resources.Msg_ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
-        //        }
-        //        finally
-        //        {
-        //            this.Cursor = System.Windows.Input.Cursors.Arrow;
-        //        }
+        // --- Navigace ---
+        private void BtnHome_Click(object sender, RoutedEventArgs e)
+        {
+            // Tady můžeš dát úvodní obrazovku nebo vyčistit Content
+            MainContentArea.Content = null;
+        }
 
-        //    }
-        //}
-
-        //private async void BtnScanFolder_Click(object sender, RoutedEventArgs e)
-        //{
-        //    var dialog = new Microsoft.Win32.OpenFolderDialog
-        //    {
-        //        Title = Properties.Resources.Dialog_Title_SelectFolder,
-        //        Multiselect = false // Chceme jednu hlavní složku
-        //    };
-
-        //    if (dialog.ShowDialog() == true)
-        //    {
-        //        try
-        //        {
-        //            this.Cursor = System.Windows.Input.Cursors.Wait;
-        //            var scanner = new ScannerService();
-
-        //            await scanner.ProcessDirectoryAsync(dialog.FolderName);
-
-        //            MessageBox.Show(Properties.Resources.Msg_ScanSuccess, Properties.Resources.Msg_Done, MessageBoxButton.OK, MessageBoxImage.Information);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show($"{Properties.Resources.Msg_ScanError}\n\n{ex.Message}", Properties.Resources.Msg_ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
-        //        }
-        //        finally
-        //        {
-        //            this.Cursor = System.Windows.Input.Cursors.Arrow;
-        //        }
-        //    }
-        //}
-
-        private void NavigateToIndexerView()
+        private void BtnScanFolder_Click(object sender, RoutedEventArgs e)
         {
             MainContentArea.Content = new IndexerView();
         }
 
-
-        private void BtnScanFolder_Click(object sender, RoutedEventArgs e)
+        private void BtnSearchEngine_Click(object sender, RoutedEventArgs e)
         {
-            NavigateToIndexerView();
+            // Nastaví obsah hlavní plochy na náš nový Tvůrce podmínek
+            // (Ujisti se, že máš nahoře using CeaIndexer.Views;)
+            MainContentArea.Content = new ConditionBuilderView();
         }
 
         private void BtnSettings_Click(object sender, RoutedEventArgs e)
         {
             MainContentArea.Content = new SettingsView();
+        }
+
+        // --- Tmavý/Světlý režim ---
+        private void BtnThemeToggle_Click(object sender, RoutedEventArgs e)
+        {
+            _isDarkMode = !_isDarkMode;
+
+            if (_isDarkMode)
+            {
+                this.Resources["WindowBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1E1E1E"));
+                this.Resources["SidebarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#151515"));
+                this.Resources["HoverBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#333333"));
+                this.Resources["TextBrush"] = Brushes.White;
+                IconTheme.Text = "\xE706"; // Sun icon
+                IconTheme.Foreground = Brushes.Gold;
+            }
+            else
+            {
+                this.Resources["WindowBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#ECF0F1"));
+                this.Resources["SidebarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2C3E50"));
+                this.Resources["HoverBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#34495E"));
+                this.Resources["TextBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2C3E50"));
+                IconTheme.Text = "\xE708"; // Moon icon
+                IconTheme.Foreground = (SolidColorBrush)this.Resources["TextBrush"];
+            }
         }
     }
 }

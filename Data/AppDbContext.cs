@@ -10,7 +10,7 @@ namespace CeaIndexer.Data
         public DbSet<FileEntry> Files { get; set; }
         public DbSet<MeasurePoint> MeasurePoints { get; set; }
         public DbSet<QuantityItem> Quantities { get; set; }
-        public DbSet<TimeInterval> TimeIntervals { get; set; }
+        public DbSet<Archive> Archives { get; set; }
 
         private static string GetDbPath()
         {

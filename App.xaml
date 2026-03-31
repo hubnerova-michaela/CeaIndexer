@@ -1,9 +1,35 @@
 ﻿<Application x:Class="CeaIndexer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              xmlns:local="clr-namespace:CeaIndexer"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <SolidColorBrush x:Key="WindowBgBrush" Color="#ECF0F1"/>
+        <SolidColorBrush x:Key="CardBgBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SidebarBgBrush" Color="#2C3E50"/>
+
+        <SolidColorBrush x:Key="TextBrush" Color="#2C3E50"/>
+        <SolidColorBrush x:Key="SecondaryTextBrush" Color="#7F8C8D"/>
+        <SolidColorBrush x:Key="IconBrush" Color="White"/>
+
+        <SolidColorBrush x:Key="HoverBrush" Color="#34495E"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#2980B9"/>
+        <SolidColorBrush x:Key="AccentHoverBrush" Color="#1F618D"/>
+
+        <SolidColorBrush x:Key="SuccessBrush" Color="#27AE60"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#BDC3C7"/>
+        <SolidColorBrush x:Key="ProgressBarBgBrush" Color="#E5E7E9"/>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemesDictionary Theme="Light" />
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="SidebarBgBrush" Color="#2C3E50"/>
+
+        </ResourceDictionary>
+
     </Application.Resources>
 </Application>

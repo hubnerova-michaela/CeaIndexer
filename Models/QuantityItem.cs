@@ -15,11 +15,11 @@ namespace CeaIndexer.Models
 
         [Required]
         public string Name { get; set; }
-        public int MeasurePointId { get; set; }
 
-        [ForeignKey("MeasurePointId")]
-        public virtual MeasurePoint MeasurePoint { get; set; }
+        public int ArchiveId { get; set; }
 
+        [ForeignKey("ArchiveId")]
+        public virtual Archive Archive { get; set; }
         public double? GlobalMinValue { get; set; }
         public double? GlobalMaxValue { get; set; }
         public double? GlobalAvg { get; set; }

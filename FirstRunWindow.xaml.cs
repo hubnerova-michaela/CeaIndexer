@@ -112,5 +112,8 @@ namespace CeaIndexer
 
             this.Close();
         }
+
+        private void TopBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) { DragMove(); }
+        private void BtnClose_Click(object sender, RoutedEventArgs e) { Close(); }
     }
 }

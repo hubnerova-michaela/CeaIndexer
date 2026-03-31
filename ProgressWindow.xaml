@@ -7,82 +7,154 @@
         xmlns:local="clr-namespace:CeaIndexer"
         mc:Ignorable="d"
         Title="{x:Static p:Resources.Progress_Title}" Height="550" Width="900"
-        WindowStartupLocation="CenterScreen" Background="#F0F3F4"
+        WindowStartupLocation="CenterScreen" 
+        WindowStyle="None" 
+        AllowsTransparency="True" 
+        Background="Transparent"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
         FontFamily="Segoe UI">
-    
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0,0,0,20">
-            <TextBlock x:Name="TxtGlobalStatus" Text="{x:Static p:Resources.Progress_Preparing}" FontSize="18" FontWeight="Bold" Foreground="#2C3E50" Margin="0,0,0,10"/>
-            <ProgressBar x:Name="GlobalProgressBar" Height="15" Minimum="0" Maximum="100" Value="0" Foreground="#27AE60" Background="#E5E7E9" BorderThickness="0"/>
-        </StackPanel>
+    <Window.Resources>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="6*"/>
-            </Grid.ColumnDefinitions>
+        <Style x:Key="WindowControlButton" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource HoverBrush}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
-            <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="15" Margin="0,0,10,0">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="2"/>
-                </Border.Effect>
+        <Style x:Key="WindowCloseButton" TargetType="Button" BasedOn="{StaticResource WindowControlButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BgBorder" Background="{TemplateBinding Background}" CornerRadius="0,12,0,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E81123"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
 
+    <Border x:Name="MainContainer" Background="{DynamicResource WindowBgBrush}" Margin="15" CornerRadius="12">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="15" ShadowDepth="2" Opacity="0.3" Color="Black"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="Transparent" MouseLeftButtonDown="TopBar_MouseLeftButtonDown">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Grid.Row="0" Text="{x:Static p:Resources.Progress_FileQueue}" FontSize="16" FontWeight="SemiBold" Foreground="#34495E" Margin="0,0,0,15"/>
-
-                    <ListBox Grid.Row="1" x:Name="LstFiles" ItemsSource="{Binding FileItems}" SelectionChanged="LstFiles_SelectionChanged" BorderThickness="0" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="0,5">
-                                    <TextBlock Text="{Binding StatusIcon}" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding FileName}" FontSize="14" Foreground="#2C3E50" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-
-            </Border>
-
-            <Border Grid.Column="1" Background="White" CornerRadius="8" Padding="15" Margin="10,0,0,0">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="10" ShadowDepth="2"/>
-                </Border.Effect>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <StackPanel Grid.Row="0" Margin="0,0,0,15">
-                        <TextBlock Text="{x:Static p:Resources.Progress_CurrentlyProcessing}" FontSize="14" Foreground="#7F8C8D"/>
-                        <TextBlock Text="{Binding CurrentFileName}" FontSize="18" FontWeight="Bold" Foreground="#2980B9" TextWrapping="Wrap" Margin="0,5,0,0"/>
-                        <TextBlock Text="{Binding CurrentFileStats}" FontSize="14" Foreground="#27AE60" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                    <TextBlock Text="{x:Static p:Resources.Progress_Title}" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold" FontSize="13"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Style="{StaticResource WindowControlButton}" Content="&#xE921;" Click="BtnMinimize_Click" ToolTip="Minimalizovat"/>
+                        <Button Style="{StaticResource WindowCloseButton}" Content="&#xE8BB;" Click="BtnClose_Click" ToolTip="Zavřít"/>
                     </StackPanel>
-
-                    <ListBox Grid.Row="1" ItemsSource="{Binding CurrentMeasurePoints}" BorderThickness="0" Background="Transparent">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" Margin="0,4">
-                                    <TextBlock Text="{Binding StatusIcon}" FontSize="14" Margin="0,0,10,0"/>
-                                    <TextBlock Text="{Binding Name}" FontSize="14" Foreground="#34495E"/>
-                                    <TextBlock Text="{Binding DeviceType, StringFormat=' ({0})'}" FontSize="13" Foreground="#95A5A6"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
                 </Grid>
             </Border>
+
+            <Grid Grid.Row="1" Margin="20,10,20,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,0,0,20">
+                    <TextBlock x:Name="TxtGlobalStatus" Text="{x:Static p:Resources.Progress_Preparing}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,10"/>
+                    <ProgressBar x:Name="GlobalProgressBar" Height="15" Minimum="0" Maximum="100" Value="0" Foreground="{DynamicResource SuccessBrush}" Background="{DynamicResource ProgressBarBgBrush}" BorderThickness="0"/>
+                </StackPanel>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="6*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="15" Margin="0,0,10,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="{x:Static p:Resources.Progress_FileQueue}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,15"/>
+
+                            <ListBox Grid.Row="1" x:Name="LstFiles" ItemsSource="{Binding FileItems}" SelectionChanged="LstFiles_SelectionChanged" BorderThickness="0" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,5">
+                                            <TextBlock Text="{Binding StatusIcon}" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                                            <TextBlock Text="{Binding FileName}" FontSize="14" Foreground="{DynamicResource TextBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="1" Background="{DynamicResource CardBgBrush}" CornerRadius="8" Padding="15" Margin="10,0,0,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Margin="0,0,0,15">
+                                <TextBlock Text="{x:Static p:Resources.Progress_CurrentlyProcessing}" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                <TextBlock Text="{Binding CurrentFileName}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" TextWrapping="Wrap" Margin="0,5,0,0"/>
+                                <TextBlock Text="{Binding CurrentFileStats}" FontSize="14" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                            </StackPanel>
+
+                            <ListBox Grid.Row="1" ItemsSource="{Binding CurrentMeasurePoints}" BorderThickness="0" Background="Transparent">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,6">
+                                            <TextBlock Text="{Binding StatusIcon}" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>
+                                                    <TextBlock Text="{Binding DeviceType, StringFormat=' ({0})'}" FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}" VerticalAlignment="Bottom" Margin="5,0,0,0"/>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding DetailsSummary}" FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}" Margin="0,2,0,0"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
         </Grid>
-    </Grid>
+    </Border>
 </Window>

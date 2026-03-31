@@ -156,7 +156,8 @@ namespace CeaIndexer.Views
                     item.FoundPoints.Add(new ProgressWindow.MeasurePointProgressItem
                     {
                         Name = report.ParsedMeasurePoint.Name,
-                        DeviceType = report.ParsedMeasurePoint.DeviceType
+                        DeviceType = report.ParsedMeasurePoint.DeviceType,
+                        DetailsSummary = $"Veličin: {report.ParsedMeasurePoint.TotalQuantitiesCount} | Archivů: {report.ParsedMeasurePoint.Archives.Count}"
                     });
                     item.FileStats = $"Nalezeno přístrojů: {item.FoundPoints.Count}";
 

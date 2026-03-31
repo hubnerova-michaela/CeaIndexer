@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace CeaIndexer
+namespace CeaIndexer.Others
 {
     public class QuantityViewModel : INotifyPropertyChanged
     {

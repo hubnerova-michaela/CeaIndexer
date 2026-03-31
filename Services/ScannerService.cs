@@ -1,14 +1,16 @@
 ﻿using CeaIndexer.Data;
+using CeaIndexer.Helpers;
 using CeaIndexer.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace CeaIndexer.Services
 {
@@ -106,6 +108,18 @@ namespace CeaIndexer.Services
 
                         // rozparsovat technická data
                         ParseConfig(configText, mp);
+
+                        // časy měření a výpadky (-list-archive-info)
+
+                        string archiveArgs = $"source=\"{filePath}\" records=\"GUID:{mp.Guid}\" -list-archive-info";
+                        string archiveText = await RunErxAsync(archiveArgs);
+                        ParseArchiveInfo(archiveText, mp);
+
+
+                        // názvy měřených veličin (-list-quantities)
+                        string quantArgs = $"source=\"{filePath}\" records=\"GUID:{mp.Guid}\" -list-quantities";
+                        string quantText = await RunErxAsync(quantArgs);
+                        ParseQuantities(quantText, mp);
 
 
                         progress?.Report(new ScanProgressReport { Type = ScanProgressReport.ReportType.MeasurePointFound, FilePath = filePath, ParsedMeasurePoint = mp });
@@ -317,6 +331,103 @@ namespace CeaIndexer.Services
                 }
             }
             return null;
+        }
+
+        private void ParseArchiveInfo(string text, MeasurePoint mp)
+        {
+            var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // Tímhle chytrým vzorem vykoušeme přesně ta sloupečky
+            string pattern = @"^(?<archive>.+?)\s+(?<count>\d+)\s+(?<from>\d{2}\.\d{2}\.\d{4}\s+\d{1,2}:\d{2}:\d{2})\s+(?<to>\d{2}\.\d{2}\.\d{4}\s+\d{1,2}:\d{2}:\d{2})\s+(?<missing>[\d,]+%|-)";
+
+            foreach (var line in lines)
+            {
+                var match = Regex.Match(line, pattern);
+                if (match.Success)
+                {
+                    string archiveName = match.Groups["archive"].Value.Trim();
+
+                    // "All" přeskočíme, to je jen součet, my chceme reálné archivy (Main, Log, Meter...)
+                    if (archiveName.Equals("All", StringComparison.OrdinalIgnoreCase)) continue;
+
+                    var archive = new Archive
+                    {
+                        ArchiveName = archiveName
+                    };
+
+                    // Parsování času
+                    if (DateTime.TryParse(match.Groups["from"].Value, out DateTime fromDate))
+                        archive.StartTime = fromDate;
+
+                    if (DateTime.TryParse(match.Groups["to"].Value, out DateTime toDate))
+                        archive.EndTime = toDate;
+
+                    // Parsování procent výpadků
+                    string missingStr = match.Groups["missing"].Value;
+                    if (missingStr != "-" && missingStr.Contains("%"))
+                    {
+                        missingStr = missingStr.Replace("%", "").Trim();
+                        if (double.TryParse(missingStr, NumberStyles.Any, new CultureInfo("cs-CZ"), out double missing))
+                        {
+                            archive.MissingPercentage = missing;
+                        }
+                    }
+
+                    mp.Archives.Add(archive);
+                }
+            }
+        }
+
+        private void ParseQuantities(string text, MeasurePoint mp)
+        {
+            var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            bool isQuantity = false;
+
+            foreach (var line in lines)
+            {
+                if (line.Trim() == "QUANTITIES:")
+                {
+                    isQuantity = true;
+                    continue;
+                }
+
+                if (isQuantity)
+                {
+                    string qName = line.Trim();
+                    if (!string.IsNullOrWhiteSpace(qName))
+                    {
+                        // 1. Rozsekneme název pro získání předpony (např. "meter")
+                        string archPrefix = qName.Contains("_") ? qName.Substring(0, qName.IndexOf('_')) : "";
+
+                        // 2. Podíváme se do slovníku, jestli známe oficiální název archivu
+                        // Pokud předponu známe, vezmeme oficiální název (např. "Electricity Meter"). 
+                        // Pokud ne, použijeme samotnou předponu jako zálohu.
+                        string expectedArchiveName = ArchiveMapper.GetOfficialName(archPrefix);
+
+                        // 3. Najdeme archiv přesně podle jména! (Žádné StartsWith, ale přesná shoda)
+                        var targetArchive = mp.Archives.FirstOrDefault(a => a.ArchiveName.Equals(expectedArchiveName, StringComparison.OrdinalIgnoreCase));
+
+                        // 4. ZÁCHRANNÁ SÍŤ (Když archiv fakt neexistuje)
+                        if (targetArchive == null)
+                        {
+                            targetArchive = new Archive
+                            {
+                                ArchiveName = string.IsNullOrWhiteSpace(expectedArchiveName) ? "Ostatní (Neznámé)" : expectedArchiveName,
+                                StartTime = DateTime.MinValue,
+                                EndTime = DateTime.MaxValue,
+                                MissingPercentage = null
+                            };
+                            mp.Archives.Add(targetArchive);
+                        }
+
+                        // 5. Přidání veličiny do správného archivu
+                        targetArchive.Quantities.Add(new QuantityItem
+                        {
+                            Name = qName
+                        });
+                    }
+                }
+            }
         }
     }
 
