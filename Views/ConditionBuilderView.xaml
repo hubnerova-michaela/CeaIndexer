@@ -85,7 +85,9 @@
         <Grid Grid.Column="0" Margin="0,0,20,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
@@ -107,7 +109,7 @@
                 </Button>
             </StackPanel>
 
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,15">
                 <ItemsControl x:Name="RuleItemsControl">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type models:ConditionRule}">
@@ -142,6 +144,28 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
+
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
+                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE179;" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" Margin="0,0,10,0"/>
+                <TextBlock Text="Výběr veličin pro hloubkovou analýzu" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+            </StackPanel>
+
+            <TreeView Grid.Row="3" 
+                      ItemsSource="{Binding QuantityTree}" 
+                      Background="{DynamicResource CardBgBrush}" 
+                      BorderBrush="{DynamicResource BorderBrush}" 
+                      BorderThickness="1" 
+                      Padding="5" 
+                      Margin="0,0,5,0">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                        <StackPanel Orientation="Horizontal" Margin="2,4,2,4">
+                            <CheckBox IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
         </Grid>
 
         <Grid Grid.Column="1">

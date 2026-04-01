@@ -26,19 +26,43 @@ namespace CeaIndexer.Services
         }
 
 
-        public async Task<List<string>> ExecuteSearchAsync(ConditionGroup rootCondition)
+        public async Task<List<string>> ExecuteSearchAsync(ConditionGroup rootCondition, List<string> selectedQuantities)
         {
-            bool requiresDeepSearch = CheckIfErxIsNeeded(rootCondition);
 
+            bool requiresDeepSearch = CheckIfErxIsNeeded(rootCondition) || (selectedQuantities != null && selectedQuantities.Any());
 
             List<string> candidateFiles = await RunMetadataSearchAsync(rootCondition);
 
+            if (selectedQuantities != null && selectedQuantities.Any() && candidateFiles.Any())
+            {
+                candidateFiles = await FilterFilesByAvailableQuantitiesAsync(candidateFiles, selectedQuantities);
+            }
+
+
             if (requiresDeepSearch && candidateFiles.Any())
             {
-                candidateFiles = await RunDeepSearchAsync(candidateFiles, rootCondition);
+
+                candidateFiles = await RunDeepSearchAsync(candidateFiles, rootCondition, selectedQuantities);
             }
 
             return candidateFiles;
+        }
+
+
+        private async Task<List<string>> FilterFilesByAvailableQuantitiesAsync(List<string> candidateFiles, List<string> selectedQuantities)
+        {
+            if (candidateFiles == null || !candidateFiles.Any())
+                return new List<string>();
+
+
+            var validFiles = await _dbContext.Files
+                .Where(f => candidateFiles.Contains(f.Path)) 
+                .Where(f => f.MeasurePoints.Any(mp => mp.Archives.Any(a =>
+                            a.Quantities.Any(q => selectedQuantities.Contains(q.Name)))))
+                .Select(f => f.Path)
+                .ToListAsync();
+
+            return validFiles;
         }
 
         // --- POMOCNÉ METODY ---
@@ -67,18 +91,29 @@ namespace CeaIndexer.Services
             return candidateFiles;
         }
 
-        private async Task<List<string>> RunDeepSearchAsync(List<string> candidateFiles, ConditionGroup rootCondition)
+        private async Task<List<string>> RunDeepSearchAsync(List<string> candidateFiles, ConditionGroup rootCondition, List<string> selectedQuantities)
         {
             var matchedFiles = new ConcurrentBag<string>();
             string erxPath = Properties.Settings.Default.ErxPath;
             var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 4 };
 
-
             var quantityRules = GetQuantityRules(rootCondition);
-            if (!quantityRules.Any()) return candidateFiles;
 
-            string quantitiesArg = string.Join(";", quantityRules.Select(r => r.TargetProperty).Distinct());
+            var allQuantitiesToExport = new HashSet<string>();
+            if (selectedQuantities != null)
+            {
+                foreach (var q in selectedQuantities) allQuantitiesToExport.Add(q);
+            }
 
+            foreach (var rule in quantityRules)
+            {
+                allQuantitiesToExport.Add(rule.TargetProperty);
+            }
+
+            if (!allQuantitiesToExport.Any()) return candidateFiles;
+
+
+            string quantitiesArg = string.Join(";", allQuantitiesToExport);
             string intervalArg = ExtractIntervalFromConditions(rootCondition);
 
             await Parallel.ForEachAsync(candidateFiles, parallelOptions, async (filePath, cancellationToken) =>

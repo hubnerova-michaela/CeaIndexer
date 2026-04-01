@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace CeaIndexer.FilterModels
 {
 
-    // POMOCNÉ TŘÍDY PRO PŘEKLADY (Tohle ti tam chybělo)
+
     public class EnumDisplayItem
     {
         public object Value { get; set; }
@@ -24,7 +24,6 @@ namespace CeaIndexer.FilterModels
     }
 
 
-    // Výčtové typy (Enums) - Obsah roletek
     public enum RuleCategory
     {
         File,     
@@ -54,7 +53,7 @@ namespace CeaIndexer.FilterModels
     }
 
 
-    // SKUPINA (např. "Splnit VŠECHNY z následujících:")
+    // SKUPINA
     public class ConditionGroup : IConditionNode, INotifyPropertyChanged
     {
         private LogicalOperator _logicOperator;
@@ -74,7 +73,6 @@ namespace CeaIndexer.FilterModels
     }
 
 
-    // 4. SAMOTNÉ PRAVIDLO (řádek s roletkami)
     public class ConditionRule : IConditionNode, INotifyPropertyChanged
     {
         private RuleCategory _category;

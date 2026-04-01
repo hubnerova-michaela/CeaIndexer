@@ -17,19 +17,9 @@
         <SolidColorBrush x:Key="AccentBrush" Color="#2980B9"/>
         <SolidColorBrush x:Key="AccentHoverBrush" Color="#1F618D"/>
 
-        <SolidColorBrush x:Key="SuccessBrush" Color="#27AE60"/>
+        <SolidColorBrush x:Key="SuccessBrush" Color="#18587a"/>
         <SolidColorBrush x:Key="BorderBrush" Color="#BDC3C7"/>
         <SolidColorBrush x:Key="ProgressBarBgBrush" Color="#E5E7E9"/>
-
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ui:ThemesDictionary Theme="Light" />
-                <ui:ControlsDictionary />
-            </ResourceDictionary.MergedDictionaries>
-
-            <SolidColorBrush x:Key="SidebarBgBrush" Color="#2C3E50"/>
-
-        </ResourceDictionary>
 
     </Application.Resources>
 </Application>

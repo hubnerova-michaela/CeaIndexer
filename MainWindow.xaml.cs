@@ -75,7 +75,7 @@ namespace CeaIndexer
         private void BtnHome_Click(object sender, RoutedEventArgs e)
         {
             // Tady můžeš dát úvodní obrazovku nebo vyčistit Content
-            MainContentArea.Content = null;
+            MainContentArea.Content = new DatabaseExplorerView();
         }
 
         private void BtnScanFolder_Click(object sender, RoutedEventArgs e)

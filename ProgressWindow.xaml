@@ -113,7 +113,7 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Margin="0,5">
-                                            <TextBlock Text="{Binding StatusIcon}" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                                            <TextBlock Text="{Binding StatusIcon}" FontFamily="Segoe UI Emoji" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
                                             <TextBlock Text="{Binding FileName}" FontSize="14" Foreground="{DynamicResource TextBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </DataTemplate>
@@ -139,7 +139,7 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Margin="0,6">
-                                            <TextBlock Text="{Binding StatusIcon}" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                                            <TextBlock Text="{Binding StatusIcon}" FontFamily="Segoe UI Emoji" FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
                                             <StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}"/>

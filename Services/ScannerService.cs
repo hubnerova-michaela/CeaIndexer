@@ -47,7 +47,6 @@ namespace CeaIndexer.Services
         
         public async Task<List<FileEntry>> ProcessFilesAsync(List<string> filesToProcess, IProgress<ScanProgressReport> progress = null)
         {
-            //kontrola bd
             using (var setupDb = new AppDbContext())
             {
                 setupDb.Database.EnsureCreated();
@@ -116,6 +115,7 @@ namespace CeaIndexer.Services
                         ParseArchiveInfo(archiveText, mp);
 
 
+
                         // názvy měřených veličin (-list-quantities)
                         string quantArgs = $"source=\"{filePath}\" records=\"GUID:{mp.Guid}\" -list-quantities";
                         string quantText = await RunErxAsync(quantArgs);
@@ -125,6 +125,12 @@ namespace CeaIndexer.Services
                         progress?.Report(new ScanProgressReport { Type = ScanProgressReport.ReportType.MeasurePointFound, FilePath = filePath, ParsedMeasurePoint = mp });
 
                         await Task.Delay(50);
+                    }
+
+                    foreach (var mp in fileEntry.MeasurePoints)
+                    {
+                        UnifyDeviceTypeWithSiblings(mp, fileEntry);
+
                     }
 
                     using (var db = new AppDbContext())
@@ -337,7 +343,12 @@ namespace CeaIndexer.Services
         {
             var lines = text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            // Tímhle chytrým vzorem vykoušeme přesně ta sloupečky
+
+            if (string.IsNullOrEmpty(mp.DeviceType) || string.IsNullOrEmpty(mp.SerialNumber))
+            {
+                GetMeasurePointInfoFromArchiveInfo(lines, mp);
+            }
+
             string pattern = @"^(?<archive>.+?)\s+(?<count>\d+)\s+(?<from>\d{2}\.\d{2}\.\d{4}\s+\d{1,2}:\d{2}:\d{2})\s+(?<to>\d{2}\.\d{2}\.\d{4}\s+\d{1,2}:\d{2}:\d{2})\s+(?<missing>[\d,]+%|-)";
 
             foreach (var line in lines)
@@ -347,7 +358,6 @@ namespace CeaIndexer.Services
                 {
                     string archiveName = match.Groups["archive"].Value.Trim();
 
-                    // "All" přeskočíme, to je jen součet, my chceme reálné archivy (Main, Log, Meter...)
                     if (archiveName.Equals("All", StringComparison.OrdinalIgnoreCase)) continue;
 
                     var archive = new Archive
@@ -355,12 +365,18 @@ namespace CeaIndexer.Services
                         ArchiveName = archiveName
                     };
 
-                    // Parsování času
-                    if (DateTime.TryParse(match.Groups["from"].Value, out DateTime fromDate))
-                        archive.StartTime = fromDate;
 
-                    if (DateTime.TryParse(match.Groups["to"].Value, out DateTime toDate))
+                    string[] dateFormats = { "dd.MM.yyyy H:mm:ss", "dd.MM.yyyy HH:mm:ss" };
+
+                    if (DateTime.TryParseExact(match.Groups["from"].Value, dateFormats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime fromDate))
+                    {
+                        archive.StartTime = fromDate;
+                    }
+
+                    if (DateTime.TryParseExact(match.Groups["to"].Value, dateFormats, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime toDate))
+                    {
                         archive.EndTime = toDate;
+                    }
 
                     // Parsování procent výpadků
                     string missingStr = match.Groups["missing"].Value;
@@ -374,6 +390,75 @@ namespace CeaIndexer.Services
                     }
 
                     mp.Archives.Add(archive);
+                }
+            }
+        }
+
+        private void GetMeasurePointInfoFromArchiveInfo(string[] lines, MeasurePoint mp)
+        {
+
+            bool isHeaderFound = false;
+
+            foreach (var line in lines)
+            {
+                if (line.StartsWith("RECORD") && line.Contains("DEVICE") && line.Contains("SERIAL NUMBER"))
+                {
+                    isHeaderFound = true;
+                    continue;
+                }
+
+                if (isHeaderFound)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    var columns = Regex.Split(line.Trim(), @"[\s\xA0]{2,}");
+
+                    // [0] RECORD (RM1) | [1] OBJECT (Hlavní) | [2] DEVICE (SIMON S) | [3] SERIAL NUMBER (5) | ...
+                    if (columns.Length >= 4)
+                    {
+                        if (string.IsNullOrEmpty(mp.DeviceType))
+                        {
+                            mp.DeviceType = columns[2].Trim();
+                        }
+
+                        if (string.IsNullOrEmpty(mp.SerialNumber))
+                        {
+                            mp.SerialNumber = columns[3].Trim();
+                        }
+                    }
+
+                    break;
+                }
+            }
+        }
+
+
+        private void UnifyDeviceTypeWithSiblings(MeasurePoint currentMp, FileEntry parentFile)
+        {
+            if (string.IsNullOrEmpty(currentMp.SerialNumber) || string.IsNullOrEmpty(currentMp.DeviceType))
+            {
+                return;
+            }
+
+            var otherMeasurePoints = parentFile.MeasurePoints.Where(mp => mp != currentMp);
+
+            foreach (var otherMp in otherMeasurePoints)
+            {
+
+                if (string.IsNullOrEmpty(otherMp.SerialNumber) || string.IsNullOrEmpty(otherMp.DeviceType))
+                {
+                    continue;
+                }
+
+                bool isSameSerial = string.Equals(currentMp.SerialNumber, otherMp.SerialNumber, StringComparison.OrdinalIgnoreCase);
+
+                bool isSubstringOfLonger = otherMp.DeviceType.StartsWith(currentMp.DeviceType, StringComparison.OrdinalIgnoreCase)
+                                        && otherMp.DeviceType.Length > currentMp.DeviceType.Length;
+
+                if (isSameSerial && isSubstringOfLonger)
+                {
+                    currentMp.DeviceType = otherMp.DeviceType;
+                    break;
                 }
             }
         }
