@@ -6,9 +6,11 @@
              xmlns:local="clr-namespace:CeaIndexer.Views"
              xmlns:models="clr-namespace:CeaIndexer.FilterModels"
              mc:Ignorable="d" 
+             Loaded="UserControl_Loaded"
              Background="Transparent">
 
     <UserControl.Resources>
+        <!-- Tvá definice tlačítek zůstává beze změny -->
         <Style x:Key="FlatButton" TargetType="Button">
             <Setter Property="Background" Value="{DynamicResource CardBgBrush}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
@@ -78,7 +80,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="550"/>
+            <ColumnDefinition Width="650"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -87,109 +89,365 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="3*"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
+            <!-- HLAVNÍ HORNÍ LIŠTA -->
+            <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE721;" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" Margin="0,0,10,0"/>
-                <TextBlock Text="Tvůrce dotazu" FontWeight="Bold" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                <TextBlock Text="Tvůrce dotazu:" FontWeight="Bold" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" Margin="0,0,10,0"/>
 
-                <Button Style="{StaticResource FlatButton}" Margin="20,0,0,0" Padding="15,7" Click="BtnAddRule_Click">
+                <!-- Přepínač AND/OR pro hlavní skupinu -->
+                <ComboBox Width="200" VerticalAlignment="Center" Margin="0,0,20,0"
+                          ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=AvailableLogicOperators}" 
+                          SelectedValuePath="Value"
+                          DisplayMemberPath="DisplayName"
+                          SelectedValue="{Binding RootCondition.LogicOperator, Mode=TwoWay}" />
+
+                <Button Style="{StaticResource FlatButton}" Margin="0,0,5,0" Padding="15,7" Click="BtnAddRule_Click">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" Margin="0,0,8,0" VerticalAlignment="Center"/>
                         <TextBlock Text="Přidat podmínku" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SuccessButton}" Margin="10,0,0,0" Padding="15,7" Click="BtnSearch_Click">
+                <Button Style="{StaticResource FlatButton}" Margin="0,0,20,0" Padding="15,7" Click="BtnAddRootGroup_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Přidat podskupinu" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource SuccessButton}" Padding="15,7" Click="BtnSearch_Click">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE768;" Margin="0,0,8,0" VerticalAlignment="Center"/>
                         <TextBlock Text="Hledat" FontWeight="Bold" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-            </StackPanel>
+            </WrapPanel>
 
+            <!-- SEZNAM PRAVIDEL A SKUPIN -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,15">
-                <ItemsControl x:Name="RuleItemsControl">
-                    <ItemsControl.ItemTemplate>
+                <ItemsControl x:Name="RuleItemsControl" ItemsSource="{Binding RootCondition.Children}">
+                    <ItemsControl.Resources>
+
+                        <!-- ŠABLONA 1: PRO JEDNOTLIVÉ PRAVIDLO -->
                         <DataTemplate DataType="{x:Type models:ConditionRule}">
                             <Border Background="{DynamicResource CardBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,5,8" Padding="10">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="110"/>
-                                        <ColumnDefinition Width="140"/>
-                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <ComboBox Grid.Column="0" Margin="0,0,10,0" SelectedItem="{Binding Category, Mode=TwoWay}" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=AvailableCategories}"/>
+                                    <!-- 1. KATEGORIE -->
+                                    <ComboBox Grid.Column="0" Margin="0,0,10,0" 
+                                        SelectedItem="{Binding Category, Mode=TwoWay}" 
+                                        ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=AvailableCategories}"/>
 
+                                    <!-- 2. VLASTNOST -->
                                     <ComboBox Grid.Column="1" Margin="0,0,10,0" 
                                         ItemsSource="{Binding AvailableProperties}" 
-                                        DisplayMemberPath="DisplayName" 
-                                        SelectedValuePath="Key"
+                                        DisplayMemberPath="DisplayName" SelectedValuePath="Key"
                                         SelectedValue="{Binding TargetProperty, Mode=TwoWay}"/>
 
-                                    <ComboBox Grid.Column="2" Margin="0,0,10,0" SelectedItem="{Binding Operator, Mode=TwoWay}" ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=AvailableOperators}"/>
+                                    <!-- 3. OPERÁTOR -->
+                                    <ComboBox Grid.Column="2" Margin="0,0,10,0" 
+                                        ItemsSource="{Binding AvailableOperators}" 
+                                        DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                        SelectedValue="{Binding SelectedOperator, Mode=TwoWay}"/>
 
-                                    <TextBox Grid.Column="3" Margin="0,0,10,0" Text="{Binding Value, Mode=TwoWay}" VerticalContentAlignment="Center" Padding="5"/>
+                                    <!-- 4. HODNOTA -->
+                                    <Grid Grid.Column="3" Margin="0,0,10,0">
+                                        <Grid.Style>
+                                            <Style TargetType="Grid">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Operator}" Value="Exists">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Operator}" Value="NotExists">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Grid.Style>
 
-                                    <Button Grid.Column="4" Style="{StaticResource DeleteRuleButton}" Width="30" ToolTip="Odebrat podmínku" Click="BtnDeleteRule_Click">
+
+                                        <TextBox Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Padding="5">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding UseDropdownForValue}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding UseDatePickerForValue}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+
+                                        <!-- NAŠEPTÁVAČ -->
+                                        <ComboBox IsEditable="True" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding AvailableValues}" Padding="5">
+                                            <ComboBox.Style>
+                                                <Style TargetType="ComboBox">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding UseDropdownForValue}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ComboBox.Style>
+                                        </ComboBox>
+
+                                        <!-- KALENDÁŘ -->
+                                        <DatePicker Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="5" SelectedDateFormat="Short">
+                                            <DatePicker.Style>
+                                                <Style TargetType="DatePicker">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding UseDatePickerForValue}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DatePicker.Style>
+                                        </DatePicker>
+                                    </Grid>
+
+                                    <!-- 5. TLAČÍTKO ODEBRAT -->
+                                    <Button Grid.Column="4" Style="{StaticResource DeleteRuleButton}" Width="30" ToolTip="Odebrat podmínku" Click="BtnDeleteNode_Click">
                                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="12"/>
                                     </Button>
                                 </Grid>
                             </Border>
                         </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+
+
+                        <!-- ŠABLONA 2: PRO PODSKUPINU -->
+                        <DataTemplate DataType="{x:Type models:ConditionGroup}">
+                            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="3,0,0,0" Margin="10,5,0,15" Padding="15,0,0,0">
+                                <StackPanel>
+
+                                    <Grid Margin="0,0,0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <ComboBox Grid.Column="0" Width="200" Margin="0,0,10,0" VerticalAlignment="Center"
+                                                  ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=AvailableLogicOperators}" 
+                                                  SelectedValuePath="Value"
+                                                  DisplayMemberPath="DisplayName"
+                                                  SelectedValue="{Binding LogicOperator, Mode=TwoWay}" />
+
+                                        <Button Grid.Column="1" Style="{StaticResource FlatButton}" Padding="10,5" Margin="0,0,5,0" Click="BtnAddRuleToGroup_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" Margin="0,0,5,0" FontSize="10" VerticalAlignment="Center"/>
+                                                <TextBlock Text="Pravidlo" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button Grid.Column="2" Style="{StaticResource FlatButton}" Padding="10,5" Click="BtnAddGroupToGroup_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" Margin="0,0,5,0" FontSize="10" VerticalAlignment="Center"/>
+                                                <TextBlock Text="Podskupina" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button>
+
+                                        <Button Grid.Column="4" Style="{StaticResource DeleteRuleButton}" Width="30" ToolTip="Odebrat celou skupinu" Click="BtnDeleteNode_Click">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="12"/>
+                                        </Button>
+                                    </Grid>
+
+                                    <!-- Vnořený strom položek této skupiny -->
+                                    <ItemsControl ItemsSource="{Binding Children}" />
+
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+
+                    </ItemsControl.Resources>
                 </ItemsControl>
             </ScrollViewer>
 
+            <!-- STROM VELIČIN DOLE (Nadpis) -->
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE179;" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" Margin="0,0,10,0"/>
-                <TextBlock Text="Výběr veličin pro hloubkovou analýzu" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                <TextBlock Text="Výběr veličin a nastavení prahových událostí" FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
             </StackPanel>
 
-            <TreeView Grid.Row="3" 
-                      ItemsSource="{Binding QuantityTree}" 
-                      Background="{DynamicResource CardBgBrush}" 
-                      BorderBrush="{DynamicResource BorderBrush}" 
-                      BorderThickness="1" 
-                      Padding="5" 
-                      Margin="0,0,5,0">
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                        <StackPanel Orientation="Horizontal" Margin="2,4,2,4">
-                            <CheckBox IsChecked="{Binding IsChecked}" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
-        </Grid>
 
+            <Grid Grid.Row="3" Margin="0,0,5,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="6*"/>
+                    <!-- Levá část pro strom -->
+                    <ColumnDefinition Width="4*"/>
+                    <!-- Pravá část pro detaily podmínky -->
+                </Grid.ColumnDefinitions>
+
+
+                <TreeView x:Name="QuantitiesTreeView" 
+                  Grid.Column="0" 
+                  ItemsSource="{Binding QuantityTree}" 
+                  Background="{DynamicResource CardBgBrush}" 
+                  BorderBrush="{DynamicResource BorderBrush}" 
+                  BorderThickness="1" 
+                  Padding="5" 
+                  Margin="0,0,10,0">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal" Margin="2,4,2,4">
+                                <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="FontWeight" Value="Normal"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HasActiveFilter}" Value="True">
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="Foreground" Value="DodgerBlue"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE71C;" FontSize="12" Margin="6,0,0,0" VerticalAlignment="Center" Foreground="DodgerBlue">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HasActiveFilter}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+
+                <!-- 2. DETAILNÍ PANEL PODMÍNKY (Vpravo) -->
+                <Border Grid.Column="1" Background="{DynamicResource CardBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=QuantitiesTreeView, Path=SelectedItem}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+
+
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                        <StackPanel DataContext="{Binding ElementName=QuantitiesTreeView, Path=SelectedItem}">
+
+                            <TextBlock Text="{Binding Name, StringFormat='Podmínka pro: {0}'}" FontWeight="Bold" FontSize="14" Margin="0,0,0,10" Foreground="{DynamicResource TextBrush}"/>
+
+
+                            <TextBlock Text="Hledat událost, kdy:" FontWeight="SemiBold" Margin="0,0,0,3" Foreground="{DynamicResource TextBrush}"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="6*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="DetailOperatorCombo" SelectedValue="{Binding FilterOperator, Mode=TwoWay}" Margin="0,0,5,0"/>
+                                <TextBox Grid.Column="1" Text="{Binding FilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Padding="3" ToolTip="Hodnota (např. 250)"/>
+                            </Grid>
+
+                            <!-- Časové omezení -->
+                            <TextBlock Text="V časovém okně:" FontWeight="SemiBold" Margin="0,0,0,3" Foreground="{DynamicResource TextBrush}"/>
+                            <ComboBox x:Name="DetailTimeCombo" SelectedValue="{Binding TimeFilter, Mode=TwoWay}" Margin="0,0,0,10"/>
+
+                            <Grid>
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsCustomTimeSelected}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Od:" VerticalAlignment="Center" Margin="0,0,5,5" Foreground="{DynamicResource TextBrush}"/>
+                                <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding CustomStartTime, Mode=TwoWay}" Margin="0,0,0,5"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Do:" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="{DynamicResource TextBrush}"/>
+                                <DatePicker Grid.Row="1" Grid.Column="1" SelectedDate="{Binding CustomEndTime, Mode=TwoWay}"/>
+                            </Grid>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+            </Grid>
+
+            <!-- PANEL VÝSLEDKŮ VPRAVO -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
-                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8A5;" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" Margin="0,0,10,0"/>
-                <TextBlock Text="Nalezené soubory" FontWeight="Bold" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
-            </StackPanel>
+            <!-- HLAVIČKA S NADPISEM A TLAČÍTKEM -->
+            <Grid Grid.Row="0" Margin="0,0,0,15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Ikonka a nadpis -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8A5;" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}" Margin="0,0,10,0"/>
+                    <TextBlock Text="Nalezené soubory" FontWeight="Bold" FontSize="18" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"/>
+                </StackPanel>
+
+                <!-- Nové tlačítko zarovnané doprava -->
+                <Button Grid.Column="2" Content="Otevřít soubor" Padding="15,5" Cursor="Hand" Click="BtnOpenFile_Click"/>
+            </Grid>
+
 
             <DataGrid x:Name="ResultsGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" 
-                      HeadersVisibility="Column" 
-                      Background="{DynamicResource CardBgBrush}" 
-                      BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" 
-                      RowBackground="{DynamicResource CardBgBrush}" 
-                      AlternatingRowBackground="{DynamicResource WindowBgBrush}" 
-                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BorderBrush}">
+              HeadersVisibility="Column" SelectionMode="Single"
+              Background="{DynamicResource CardBgBrush}" 
+              BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" 
+              RowBackground="{DynamicResource CardBgBrush}" 
+              AlternatingRowBackground="{DynamicResource WindowBgBrush}" 
+              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource BorderBrush}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Cesta k souboru" Binding="{Binding}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
     </Grid>
+
 </UserControl>

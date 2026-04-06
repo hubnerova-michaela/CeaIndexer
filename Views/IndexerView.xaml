@@ -88,7 +88,7 @@
             </Grid.ColumnDefinitions>
 
             <Button x:Name="BtnBack" Grid.Column="0" Style="{StaticResource IconButtonStyle}" 
-                    Width="40" Height="40" Margin="0,0,15,0" Click="BtnBack_Click" ToolTip="Zpět">
+                    Width="40" Height="40" Margin="0,0,15,0" Click="BtnBack_Click" ToolTip="{x:Static p:Resources.IndexerView_BackTitle}">
                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE72B;" FontSize="18"/>
             </Button>
 

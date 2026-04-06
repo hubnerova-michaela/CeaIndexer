@@ -244,7 +244,7 @@
     <value>Save configuration</value>
   </data>
   <data name="Progress_Title" xml:space="preserve">
-    <value>Monitoring indexace dat</value>
+    <value>Data Indexing Monitoring</value>
   </data>
   <data name="Progress_Preparing" xml:space="preserve">
     <value>Preparing to scan...</value>
@@ -278,5 +278,71 @@
   </data>
   <data name="Btn_SaveSelection" xml:space="preserve">
     <value>Save Selection</value>
+  </data>
+  <data name="ProgressWindow_SelectFile" xml:space="preserve">
+    <value>Select a file from the list on the left...</value>
+  </data>
+  <data name="ProgressWindow_WaitingForProcessing" xml:space="preserve">
+    <value>Queued for processing...</value>
+  </data>
+  <data name="ProgressWindow_ScanningInProgressMessage" xml:space="preserve">
+    <value>The files are currently being scanned. Please wait until the process is complete.</value>
+  </data>
+  <data name="ProgressWindow_ScanningInProgressTitle" xml:space="preserve">
+    <value>Scanning in progress</value>
+  </data>
+  <data name="Window_Minimize" xml:space="preserve">
+    <value>Minimize</value>
+  </data>
+  <data name="Window_Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="IndexerView_BackMessage" xml:space="preserve">
+    <value>Back to the main overview</value>
+  </data>
+  <data name="IndexerView_BackTitle" xml:space="preserve">
+    <value>Go back</value>
+  </data>
+  <data name="IndexerView_NoFilesSelected" xml:space="preserve">
+    <value>You have not selected any files to index.</value>
+  </data>
+  <data name="IndexerView_ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="IndexerView_ProcessingZero" xml:space="preserve">
+    <value>0 of {0} files processed (0%)</value>
+  </data>
+  <data name="IndexerView_SearchingMeasurePoints" xml:space="preserve">
+    <value>Searching for Measure Points...</value>
+  </data>
+  <data name="IndexerView_QuantitiesAndArchivesInfo" xml:space="preserve">
+    <value>Quantities: {0} | Archives: {1}</value>
+  </data>
+  <data name="IndexerView_FoundDevicesInfo" xml:space="preserve">
+    <value>Devices found: {0}</value>
+  </data>
+  <data name="IndexerView_FileErrorPrefix" xml:space="preserve">
+    <value>Error:</value>
+  </data>
+  <data name="IndexerView_ProcessingProgress" xml:space="preserve">
+    <value>{0} of {1} files processed ({2} %)</value>
+  </data>
+  <data name="IndexerView_CompleteMessage" xml:space="preserve">
+    <value>🎉 All done! A total of {0} measure points from {1} files have been saved.</value>
+  </data>
+  <data name="IndexerView_FatalScannerErrorPrefix" xml:space="preserve">
+    <value>Fatal scanner error: {0}</value>
+  </data>
+  <data name="Window_Maximize" xml:space="preserve">
+    <value>Maximize</value>
+  </data>
+  <data name="Window_Restore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="Btn_ToggleTheme" xml:space="preserve">
+    <value>Toggle theme</value>
+  </data>
+  <data name="Btn_SearchEngine" xml:space="preserve">
+    <value>Search engine</value>
   </data>
 </root>

@@ -23,7 +23,14 @@ namespace CeaIndexer.Data
             if (!optionsBuilder.IsConfigured)
             {
                 var dbPath = GetDbPath();
-                optionsBuilder.UseSqlite($"Data Source={dbPath}");
+                optionsBuilder.UseSqlite($"Data Source={dbPath}")
+
+                // 1. ZAPNUTÍ LOGOVÁNÍ DO VS
+                .LogTo(message => System.Diagnostics.Debug.WriteLine(message), Microsoft.Extensions.Logging.LogLevel.Information)
+
+                // 2. ZOBRAZENÍ KONKRÉTNÍCH HODNOT
+                .EnableSensitiveDataLogging();
+
             }
         }
 

@@ -136,7 +136,7 @@
                         <Button Style="{StaticResource SidebarIconBtn}" Click="BtnScanFolder_Click" ToolTip="{x:Static p:Resources.Btn_ScanFolder}" Margin="0,5,0,0">
                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE838;" FontSize="22" Foreground="{DynamicResource IconBrush}"/>
                         </Button>
-                        <Button Style="{StaticResource SidebarIconBtn}" Click="BtnSearchEngine_Click" ToolTip="Vyhledávání" Margin="0,5,0,0">
+                        <Button Style="{StaticResource SidebarIconBtn}" Click="BtnSearchEngine_Click" ToolTip="{x:Static p:Resources.Btn_SearchEngine}"  Margin="0,5,0,0">
                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE721;" FontSize="22" Foreground="{DynamicResource IconBrush}"/>
                         </Button>
                     </StackPanel>
@@ -160,13 +160,13 @@
                 <Border Grid.Row="0" Background="Transparent" MouseLeftButtonDown="TopBar_MouseLeftButtonDown">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
-                        <Button x:Name="BtnThemeToggle" Width="46" Height="35" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnThemeToggle_Click" ToolTip="Přepnout motiv">
+                        <Button x:Name="BtnThemeToggle" Width="46" Height="35" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="BtnThemeToggle_Click" ToolTip="{x:Static p:Resources.Btn_ToggleTheme}">
                             <TextBlock x:Name="IconTheme" FontFamily="Segoe MDL2 Assets" Text="&#xE708;" FontSize="14" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Button>
 
-                        <Button Style="{StaticResource WindowControlButton}" Content="&#xE921;" Click="BtnMinimize_Click" ToolTip="Minimalizovat"/>
-                        <Button x:Name="BtnMaximizeIcon" Style="{StaticResource WindowControlButton}" Content="&#xE922;" Click="BtnMaximize_Click" ToolTip="Maximalizovat"/>
-                        <Button Style="{StaticResource WindowCloseButton}" Content="&#xE8BB;" Click="BtnClose_Click" ToolTip="Zavřít"/>
+                        <Button Style="{StaticResource WindowControlButton}" Content="&#xE921;" Click="BtnMinimize_Click" ToolTip="{x:Static p:Resources.Window_Minimize}"/>
+                        <Button x:Name="BtnMaximizeIcon" Style="{StaticResource WindowControlButton}" Content="&#xE922;" Click="BtnMaximize_Click" ToolTip="{x:Static p:Resources.Window_Maximize}"/>
+                        <Button Style="{StaticResource WindowCloseButton}" Content="&#xE8BB;" Click="BtnClose_Click" ToolTip="{x:Static p:Resources.Window_Close}"/>
 
                     </StackPanel>
                 </Border>

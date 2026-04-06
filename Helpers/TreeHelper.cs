@@ -1,4 +1,5 @@
-﻿using CeaIndexer.ViewModels;
+﻿using CeaIndexer.FilterModels;
+using CeaIndexer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,6 @@ namespace CeaIndexer.Helpers
 {
     public static class TreeHelper
     {
-        // vytvoření stromu z názvů veličin
         public static ObservableCollection<QuantityNode> BuildQuantityTree(IEnumerable<string> rawQuantities)
         {
             var rootNodes = new ObservableCollection<QuantityNode>();
@@ -47,25 +47,89 @@ namespace CeaIndexer.Helpers
             return rootNodes;
         }
 
-        // získání vybraných veličin ze zaškrtnutého stromu
-        public static List<string> GetSelectedQuantities(ObservableCollection<QuantityNode> nodes)
+        // Získání vybraných veličin ze zaškrtnutého stromu
+        public static List<QuantityCondition> GetSelectedQuantities(IEnumerable<QuantityNode> nodes, QuantityNode activeFilterNode = null)
         {
-            List<string> selectedTechNames = new List<string>();
+            var resultConditions = new List<QuantityCondition>();
 
             foreach (var node in nodes)
             {
+                QuantityNode currentFilter = node.HasActiveFilter ? node : activeFilterNode;
+
+
                 if (node.IsChecked && node.IsFinalQuantity)
                 {
-                    selectedTechNames.Add(node.TechName);
+                    var condition = new QuantityCondition
+                    {
+                        TechName = node.TechName
+                    };
+
+                    if (currentFilter != null && currentFilter.HasActiveFilter)
+                    {
+                        condition.Operator = currentFilter.FilterOperator;
+                        condition.Value = currentFilter.FilterValue;
+
+                        CalculateTimeInterval(currentFilter, condition);
+                    }
+
+                    resultConditions.Add(condition);
                 }
 
                 if (node.Children.Count > 0)
                 {
-                    selectedTechNames.AddRange(GetSelectedQuantities(node.Children));
+                    resultConditions.AddRange(GetSelectedQuantities(node.Children, currentFilter));
                 }
             }
 
-            return selectedTechNames;
+            return resultConditions;
+        }
+
+        private static void CalculateTimeInterval(QuantityNode filterNode, QuantityCondition condition)
+        {
+            DateTime now = DateTime.Now;
+
+            switch (filterNode.TimeFilter)
+            {
+                case TimeFilterType.Today:
+                    condition.IntervalStart = now.Date; // Dnes 00:00:00
+                    condition.IntervalEnd = now.Date.AddDays(1).AddTicks(-1); // Dnes 23:59:59
+                    break;
+
+                case TimeFilterType.Yesterday:
+                    condition.IntervalStart = now.Date.AddDays(-1);
+                    condition.IntervalEnd = now.Date.AddTicks(-1);
+                    break;
+
+                case TimeFilterType.LastWeek:
+                    condition.IntervalStart = now.AddDays(-7);
+                    condition.IntervalEnd = now;
+                    break;
+
+                case TimeFilterType.LastMonth:
+                    condition.IntervalStart = now.AddMonths(-1);
+                    condition.IntervalEnd = now;
+                    break;
+
+                case TimeFilterType.LastYear:
+                    condition.IntervalStart = now.AddYears(-1);
+                    condition.IntervalEnd = now;
+                    break;
+
+                case TimeFilterType.CustomInterval:
+                    condition.IntervalStart = filterNode.CustomStartTime;
+
+                    if (filterNode.CustomEndTime.HasValue)
+                    {
+                        condition.IntervalEnd = filterNode.CustomEndTime.Value.Date.AddDays(1).AddTicks(-1);
+                    }
+                    break;
+
+                case TimeFilterType.None:
+                default:
+                    condition.IntervalStart = null;
+                    condition.IntervalEnd = null;
+                    break;
+            }
         }
     }
 }

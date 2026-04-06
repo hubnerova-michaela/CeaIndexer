@@ -179,6 +179,8 @@ namespace CeaIndexer.Services
 
         private async Task<string> RunErxAsync(string arguments)
         {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = _erxPath,
@@ -187,7 +189,7 @@ namespace CeaIndexer.Services
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                StandardOutputEncoding = System.Text.Encoding.UTF8
+                StandardOutputEncoding = System.Text.Encoding.GetEncoding(852)
             };
 
             using var process = new Process { StartInfo = startInfo };

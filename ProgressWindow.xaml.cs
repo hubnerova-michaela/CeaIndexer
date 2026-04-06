@@ -23,7 +23,8 @@ namespace CeaIndexer
     public partial class ProgressWindow : Window, INotifyPropertyChanged
     {
 
-        // Tyhle kolekce se budou automaticky ukazovat v těch XAML ListBoxech
+        public bool IsWorking { get; set; } = false;
+
         public ObservableCollection<FileProgressItem> FileItems { get; set; } = new ObservableCollection<FileProgressItem>();
 
         private ObservableCollection<MeasurePointProgressItem> _currentMeasurePoints;
@@ -34,7 +35,7 @@ namespace CeaIndexer
             set { _currentMeasurePoints = value; OnPropertyChanged(); }
         }
 
-        private string _currentFileName = "Vyberte soubor ze seznamu vlevo...";
+        private string _currentFileName = Properties.Resources.ProgressWindow_SelectFile;
         public string CurrentFileName
         {
             get => _currentFileName;
@@ -50,7 +51,7 @@ namespace CeaIndexer
         public ProgressWindow()
         {
             InitializeComponent();
-            DataContext = this; // Tímhle oknu řekneme, ať hledá data přímo v této třídě
+            DataContext = this;
         }
 
         private void LstFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -59,11 +60,11 @@ namespace CeaIndexer
             {
                 CurrentFileName = selectedFile.FileName;
                 CurrentFileStats = selectedFile.FileStats;
-                CurrentMeasurePoints = selectedFile.FoundPoints; // Kouzlo! Zobrazíme jen přístroje pro tento soubor
+                CurrentMeasurePoints = selectedFile.FoundPoints;
             }
         }
 
-        // Nutné pro automatické překreslování UI
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
@@ -86,7 +87,7 @@ namespace CeaIndexer
 
             public ObservableCollection<MeasurePointProgressItem> FoundPoints { get; set; } = new ObservableCollection<MeasurePointProgressItem>();
 
-            private string _fileStats = "Čeká na zpracování...";
+            private string _fileStats = Properties.Resources.ProgressWindow_WaitingForProcessing;
             public string FileStats
             {
                 get => _fileStats;
@@ -102,7 +103,7 @@ namespace CeaIndexer
             public string Name { get; set; }
             public string DeviceType { get; set; }
 
-            private string _statusIcon = "✅"; // Přístroj se ukáže většinou až když je nalezen
+            private string _statusIcon = "✅";
             public string StatusIcon
             {
                 get => _statusIcon;
@@ -117,6 +118,39 @@ namespace CeaIndexer
 
         private void TopBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) { DragMove(); }
         private void BtnMinimize_Click(object sender, RoutedEventArgs e) { WindowState = WindowState.Minimized; }
-        private void BtnClose_Click(object sender, RoutedEventArgs e) { Close(); }
+        private void BtnClose_Click(object sender, RoutedEventArgs e) 
+        {
+            TryCloseWindow();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            if (IsWorking)
+            {
+                MessageBox.Show(Properties.Resources.ProgressWindow_ScanningInProgressMessage,
+                                Properties.Resources.ProgressWindow_ScanningInProgressTitle,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+
+                e.Cancel = true;
+            }
+
+            base.OnClosing(e);
+        }
+
+        private void TryCloseWindow()
+        {
+            if (IsWorking)
+            {
+                MessageBox.Show(Properties.Resources.ProgressWindow_ScanningInProgressMessage,
+                                Properties.Resources.ProgressWindow_ScanningInProgressTitle,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+            }
+            else
+            {
+                Close();
+            }
+        }
     }
 }

@@ -23,6 +23,7 @@ namespace CeaIndexer.Views
 
     public partial class IndexerView : UserControl
     {
+        public static bool IsScanning { get; private set; } = false;
 
         private ObservableCollection<FileNode> _rootFolders = new ObservableCollection<FileNode>();
         public IndexerView()
@@ -103,7 +104,7 @@ namespace CeaIndexer.Views
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         { 
-            MessageBox.Show("Návrat na hlavní přehled.", "Zpět");
+            MessageBox.Show(Properties.Resources.IndexerView_BackMessage, Properties.Resources.IndexerView_BackTitle);
         }
 
         private void BtnSelectAll_Click(object sender, RoutedEventArgs e)
@@ -122,7 +123,7 @@ namespace CeaIndexer.Views
 
             if (filesToProcess.Count == 0)
             {
-                MessageBox.Show("Nemáte vybrané žádné soubory k indexaci.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(Properties.Resources.IndexerView_NoFilesSelected, Properties.Resources.IndexerView_ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -135,7 +136,7 @@ namespace CeaIndexer.Views
             }
 
             progressWindow.GlobalProgressBar.Maximum = filesToProcess.Count;
-            progressWindow.TxtGlobalStatus.Text = $"Zpracováno 0 z {filesToProcess.Count} souborů (0 %)";
+            progressWindow.TxtGlobalStatus.Text = string.Format(Properties.Resources.IndexerView_ProcessingZero, filesToProcess.Count);
 
             progressWindow.Show();
 
@@ -147,7 +148,7 @@ namespace CeaIndexer.Views
                 if (report.Type == ScanProgressReport.ReportType.FileStarted)
                 {
                     item.StatusIcon = "🔄";
-                    item.FileStats = "Hledám Measure Points...";
+                    item.FileStats = Properties.Resources.IndexerView_SearchingMeasurePoints;
 
                     progressWindow.LstFiles.SelectedItem = item;
                 }
@@ -157,9 +158,9 @@ namespace CeaIndexer.Views
                     {
                         Name = report.ParsedMeasurePoint.Name,
                         DeviceType = report.ParsedMeasurePoint.DeviceType,
-                        DetailsSummary = $"Veličin: {report.ParsedMeasurePoint.TotalQuantitiesCount} | Archivů: {report.ParsedMeasurePoint.Archives.Count}"
+                        DetailsSummary = string.Format(Properties.Resources.IndexerView_QuantitiesAndArchivesInfo, report.ParsedMeasurePoint.TotalQuantitiesCount, report.ParsedMeasurePoint.Archives.Count)
                     });
-                    item.FileStats = $"Nalezeno přístrojů: {item.FoundPoints.Count}";
+                    item.FileStats = string.Format(Properties.Resources.IndexerView_FoundDevicesInfo, item.FoundPoints.Count);
 
                     if (progressWindow.LstFiles.SelectedItem == item)
                         progressWindow.CurrentFileStats = item.FileStats;
@@ -167,35 +168,41 @@ namespace CeaIndexer.Views
                 else if (report.Type == ScanProgressReport.ReportType.FileCompleted || report.Type == ScanProgressReport.ReportType.FileError)
                 {
                     item.StatusIcon = report.Type == ScanProgressReport.ReportType.FileCompleted ? "✅" : "❌";
-                    if (report.Type == ScanProgressReport.ReportType.FileError) item.FileStats = "Chyba: " + report.ErrorMessage;
+                    if (report.Type == ScanProgressReport.ReportType.FileError) item.FileStats = Properties.Resources.IndexerView_FileErrorPrefix + report.ErrorMessage;
 
                     if (progressWindow.LstFiles.SelectedItem == item)
                         progressWindow.CurrentFileStats = item.FileStats;
 
                     progressWindow.GlobalProgressBar.Value = report.ProcessedFiles;
                     int percentage = (int)((report.ProcessedFiles / (double)report.TotalFiles) * 100);
-                    progressWindow.TxtGlobalStatus.Text = $"Zpracováno {report.ProcessedFiles} z {report.TotalFiles} souborů ({percentage} %)";
+                    progressWindow.TxtGlobalStatus.Text = string.Format(Properties.Resources.IndexerView_ProcessingProgress, report.ProcessedFiles, report.TotalFiles, percentage);
                 }
             });
 
             try
             {
                 BtnStartIndex.IsEnabled = false;
-
+                IsScanning = true;
+                progressWindow.IsWorking = true;
                 var scanner = new ScannerService();
                 List<FileEntry> nactenaData = await scanner.ProcessFilesAsync(filesToProcess, progressIndicator);
 
-                
-                progressWindow.TxtGlobalStatus.Text = $"🎉 Kompletně hotovo! Uloženo celkem {nactenaData.Sum(x => x.MeasurePoints.Count)} přístrojů z {filesToProcess.Count} souborů.";
+
+                progressWindow.TxtGlobalStatus.Text = string.Format(Properties.Resources.IndexerView_CompleteMessage, nactenaData.Sum(x => x.MeasurePoints.Count), filesToProcess.Count);
                 progressWindow.GlobalProgressBar.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.DodgerBlue);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Fatální chyba skeneru: {ex.Message}", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(string.Format(Properties.Resources.IndexerView_FatalScannerErrorPrefix, ex.Message), Properties.Resources.IndexerView_ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
                 BtnStartIndex.IsEnabled = true;
+                IsScanning = false;
+                if (progressWindow != null)
+                {
+                    progressWindow.IsWorking = false;
+                }
             }
 
         }

@@ -124,11 +124,29 @@ namespace CeaIndexer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search engine.
+        /// </summary>
+        public static string Btn_SearchEngine {
+            get {
+                return ResourceManager.GetString("Btn_SearchEngine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Btn_Settings {
             get {
                 return ResourceManager.GetString("Btn_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle theme.
+        /// </summary>
+        public static string Btn_ToggleTheme {
+            get {
+                return ResourceManager.GetString("Btn_ToggleTheme", resourceCulture);
             }
         }
         
@@ -304,6 +322,114 @@ namespace CeaIndexer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back to the main overview.
+        /// </summary>
+        public static string IndexerView_BackMessage {
+            get {
+                return ResourceManager.GetString("IndexerView_BackMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go back.
+        /// </summary>
+        public static string IndexerView_BackTitle {
+            get {
+                return ResourceManager.GetString("IndexerView_BackTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 🎉 All done! A total of {0} measure points from {1} files have been saved..
+        /// </summary>
+        public static string IndexerView_CompleteMessage {
+            get {
+                return ResourceManager.GetString("IndexerView_CompleteMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string IndexerView_ErrorTitle {
+            get {
+                return ResourceManager.GetString("IndexerView_ErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatal scanner error: {0}.
+        /// </summary>
+        public static string IndexerView_FatalScannerErrorPrefix {
+            get {
+                return ResourceManager.GetString("IndexerView_FatalScannerErrorPrefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error:.
+        /// </summary>
+        public static string IndexerView_FileErrorPrefix {
+            get {
+                return ResourceManager.GetString("IndexerView_FileErrorPrefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Devices found: {0}.
+        /// </summary>
+        public static string IndexerView_FoundDevicesInfo {
+            get {
+                return ResourceManager.GetString("IndexerView_FoundDevicesInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have not selected any files to index..
+        /// </summary>
+        public static string IndexerView_NoFilesSelected {
+            get {
+                return ResourceManager.GetString("IndexerView_NoFilesSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1} files processed ({2} %).
+        /// </summary>
+        public static string IndexerView_ProcessingProgress {
+            get {
+                return ResourceManager.GetString("IndexerView_ProcessingProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0 of {0} files processed (0%).
+        /// </summary>
+        public static string IndexerView_ProcessingZero {
+            get {
+                return ResourceManager.GetString("IndexerView_ProcessingZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantities: {0} | Archives: {1}.
+        /// </summary>
+        public static string IndexerView_QuantitiesAndArchivesInfo {
+            get {
+                return ResourceManager.GetString("IndexerView_QuantitiesAndArchivesInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Searching for Measure Points....
+        /// </summary>
+        public static string IndexerView_SearchingMeasurePoints {
+            get {
+                return ResourceManager.GetString("IndexerView_SearchingMeasurePoints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Czech (cs-CZ).
         /// </summary>
         public static string Lang_Cs {
@@ -412,11 +538,47 @@ namespace CeaIndexer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Monitoring indexace dat.
+        ///   Looks up a localized string similar to Data Indexing Monitoring.
         /// </summary>
         public static string Progress_Title {
             get {
                 return ResourceManager.GetString("Progress_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The files are currently being scanned. Please wait until the process is complete..
+        /// </summary>
+        public static string ProgressWindow_ScanningInProgressMessage {
+            get {
+                return ResourceManager.GetString("ProgressWindow_ScanningInProgressMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scanning in progress.
+        /// </summary>
+        public static string ProgressWindow_ScanningInProgressTitle {
+            get {
+                return ResourceManager.GetString("ProgressWindow_ScanningInProgressTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a file from the list on the left....
+        /// </summary>
+        public static string ProgressWindow_SelectFile {
+            get {
+                return ResourceManager.GetString("ProgressWindow_SelectFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queued for processing....
+        /// </summary>
+        public static string ProgressWindow_WaitingForProcessing {
+            get {
+                return ResourceManager.GetString("ProgressWindow_WaitingForProcessing", resourceCulture);
             }
         }
         
@@ -538,11 +700,47 @@ namespace CeaIndexer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Window_Close {
+            get {
+                return ResourceManager.GetString("Window_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Getting Started.
         /// </summary>
         public static string Window_GettingStarted_Title {
             get {
                 return ResourceManager.GetString("Window_GettingStarted_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximize.
+        /// </summary>
+        public static string Window_Maximize {
+            get {
+                return ResourceManager.GetString("Window_Maximize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimize.
+        /// </summary>
+        public static string Window_Minimize {
+            get {
+                return ResourceManager.GetString("Window_Minimize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restore.
+        /// </summary>
+        public static string Window_Restore {
+            get {
+                return ResourceManager.GetString("Window_Restore", resourceCulture);
             }
         }
     }

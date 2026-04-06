@@ -244,7 +244,7 @@
     <value>Uložit nastavení</value>
   </data>
   <data name="Progress_Title" xml:space="preserve">
-    <value>Data Indexing Monitoring</value>
+    <value>Monitoring indexace dat </value>
   </data>
   <data name="Progress_Preparing" xml:space="preserve">
     <value>Připravuji skenování...</value>
@@ -278,5 +278,71 @@
   </data>
   <data name="Btn_SaveSelection" xml:space="preserve">
     <value>Uložit vybrané</value>
+  </data>
+  <data name="ProgressWindow_SelectFile" xml:space="preserve">
+    <value>Vyberte soubor ze seznamu vlevo...</value>
+  </data>
+  <data name="ProgressWindow_WaitingForProcessing" xml:space="preserve">
+    <value>Čeká na zpracování...</value>
+  </data>
+  <data name="ProgressWindow_ScanningInProgressMessage" xml:space="preserve">
+    <value>Skenování souborů právě probíhá. Prosím, vyčkejte na jeho dokončení.</value>
+  </data>
+  <data name="ProgressWindow_ScanningInProgressTitle" xml:space="preserve">
+    <value>Skenování probíhá</value>
+  </data>
+  <data name="Window_Minimize" xml:space="preserve">
+    <value>Minimalizovat</value>
+  </data>
+  <data name="Window_Close" xml:space="preserve">
+    <value>Zavřít</value>
+  </data>
+  <data name="IndexerView_BackMessage" xml:space="preserve">
+    <value>Návrat na hlavní přehled</value>
+  </data>
+  <data name="IndexerView_BackTitle" xml:space="preserve">
+    <value>Zpět</value>
+  </data>
+  <data name="IndexerView_NoFilesSelected" xml:space="preserve">
+    <value>Nemáte vybrané žádné soubory k indexaci.</value>
+  </data>
+  <data name="IndexerView_ErrorTitle" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="IndexerView_ProcessingZero" xml:space="preserve">
+    <value>Zpracováno 0 z {0} souborů (0 %)</value>
+  </data>
+  <data name="IndexerView_SearchingMeasurePoints" xml:space="preserve">
+    <value>Hledám Measure Points...</value>
+  </data>
+  <data name="IndexerView_QuantitiesAndArchivesInfo" xml:space="preserve">
+    <value>Veličin: {0} | Archivů: {1}</value>
+  </data>
+  <data name="IndexerView_FoundDevicesInfo" xml:space="preserve">
+    <value>Nalezeno přístrojů: {0}</value>
+  </data>
+  <data name="IndexerView_FileErrorPrefix" xml:space="preserve">
+    <value>Chyba: </value>
+  </data>
+  <data name="IndexerView_ProcessingProgress" xml:space="preserve">
+    <value>Zpracováno {0} z {1} souborů ({2} %)</value>
+  </data>
+  <data name="IndexerView_CompleteMessage" xml:space="preserve">
+    <value>🎉 Kompletně hotovo! Uloženo celkem {0} přístrojů z {1} souborů.</value>
+  </data>
+  <data name="IndexerView_FatalScannerErrorPrefix" xml:space="preserve">
+    <value>Fatální chyba skeneru: {0}</value>
+  </data>
+  <data name="Window_Maximize" xml:space="preserve">
+    <value>Maximalizovat</value>
+  </data>
+  <data name="Window_Restore" xml:space="preserve">
+    <value>Obnovit</value>
+  </data>
+  <data name="Btn_ToggleTheme" xml:space="preserve">
+    <value>Přepnout motiv</value>
+  </data>
+  <data name="Btn_SearchEngine" xml:space="preserve">
+    <value>Vyhledávání</value>
   </data>
 </root>

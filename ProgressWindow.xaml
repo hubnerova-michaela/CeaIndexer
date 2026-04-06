@@ -77,8 +77,8 @@
                 <Grid>
                     <TextBlock Text="{x:Static p:Resources.Progress_Title}" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="{DynamicResource TextBrush}" FontWeight="SemiBold" FontSize="13"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Style="{StaticResource WindowControlButton}" Content="&#xE921;" Click="BtnMinimize_Click" ToolTip="Minimalizovat"/>
-                        <Button Style="{StaticResource WindowCloseButton}" Content="&#xE8BB;" Click="BtnClose_Click" ToolTip="Zavřít"/>
+                        <Button Style="{StaticResource WindowControlButton}" Content="&#xE921;" Click="BtnMinimize_Click" ToolTip="{x:Static p:Resources.Window_Minimize}"/>
+                        <Button Style="{StaticResource WindowCloseButton}" Content="&#xE8BB;" Click="BtnClose_Click" ToolTip="{x:Static p:Resources.Window_Close}"/>
                     </StackPanel>
                 </Grid>
             </Border>

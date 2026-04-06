@@ -42,39 +42,53 @@ namespace CeaIndexer
             }
         }
 
-        // --- Ovládání okna ---
+
         private void TopBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left) this.DragMove();
         }
 
-        private void BtnClose_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown();
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            if (IndexerView.IsScanning)
+            {
+                MessageBox.Show(Properties.Resources.ProgressWindow_ScanningInProgressMessage,
+                                Properties.Resources.ProgressWindow_ScanningInProgressTitle,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return;
+            }
+
+            Application.Current.Shutdown();
+        }
         private void BtnMinimize_Click(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;
+
+
         private void BtnMaximize_Click(object sender, RoutedEventArgs e)
         {
             if (this.WindowState == WindowState.Normal)
             {
-                // Maximalizace okna
+
                 this.MaxHeight = SystemParameters.WorkArea.Height + 10;
                 this.WindowState = WindowState.Maximized;
 
-                BtnMaximizeIcon.Content = "\xE923"; // Ikonka "dvou čtverečků"
-                BtnMaximizeIcon.ToolTip = "Obnovit"; // <--- NOVÝ TEXT
+                BtnMaximizeIcon.Content = "\xE923";
+                BtnMaximizeIcon.ToolTip = Properties.Resources.Window_Restore; 
             }
             else
             {
-                // Návrat do normální velikosti
+
                 this.WindowState = WindowState.Normal;
 
-                BtnMaximizeIcon.Content = "\xE922"; // Ikonka "jednoho čtverečku"
-                BtnMaximizeIcon.ToolTip = "Maximalizovat"; // <--- PŮVODNÍ TEXT
+                BtnMaximizeIcon.Content = "\xE922";
+                BtnMaximizeIcon.ToolTip = Properties.Resources.Window_Maximize;
             }
         }
 
-        // --- Navigace ---
+
         private void BtnHome_Click(object sender, RoutedEventArgs e)
         {
-            // Tady můžeš dát úvodní obrazovku nebo vyčistit Content
             MainContentArea.Content = new DatabaseExplorerView();
         }
 
@@ -85,8 +99,7 @@ namespace CeaIndexer
 
         private void BtnSearchEngine_Click(object sender, RoutedEventArgs e)
         {
-            // Nastaví obsah hlavní plochy na náš nový Tvůrce podmínek
-            // (Ujisti se, že máš nahoře using CeaIndexer.Views;)
+
             MainContentArea.Content = new ConditionBuilderView();
         }
 
@@ -95,7 +108,6 @@ namespace CeaIndexer
             MainContentArea.Content = new SettingsView();
         }
 
-        // --- Tmavý/Světlý režim ---
         private void BtnThemeToggle_Click(object sender, RoutedEventArgs e)
         {
             _isDarkMode = !_isDarkMode;
@@ -117,6 +129,25 @@ namespace CeaIndexer
                 this.Resources["TextBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2C3E50"));
                 IconTheme.Text = "\xE708"; // Moon icon
                 IconTheme.Foreground = (SolidColorBrush)this.Resources["TextBrush"];
+            }
+        }
+
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+
+            if (IndexerView.IsScanning)
+            {
+                MessageBox.Show(Properties.Resources.ProgressWindow_ScanningInProgressMessage,
+                                Properties.Resources.ProgressWindow_ScanningInProgressTitle,
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+
+                e.Cancel = true;
+            }
+            else
+            {
+                base.OnClosing(e);
             }
         }
     }
